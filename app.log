@@ -1,0 +1,8 @@
+INFO:__main__:Calling function: add with args: (5, 3), kwargs: {}
+INFO:__main__:Function: add returned: 8
+INFO:__main__:Calling function: divide with args: (6, 0), kwargs: {}
+ERROR:__main__:Function: divide raised an exception: Cannot divide by zero
+INFO:__main__:Calling function: add with args: (5, 3), kwargs: {}
+INFO:__main__:Function: add returned: 8
+INFO:__main__:Calling function: divide with args: (6, 3), kwargs: {}
+INFO:__main__:Function: divide returned: 2.0

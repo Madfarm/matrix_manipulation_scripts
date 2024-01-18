@@ -4,7 +4,7 @@ class Node:
         self.children = children or []
     
     def __repr__(self):
-        return f"Node({self.value})"
+        return str(self.value)
 
 def generate_binary_tree(depth):
     nodes = [Node(i) for i in range(2**(depth-1))]
