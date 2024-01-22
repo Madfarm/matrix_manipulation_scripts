@@ -4,20 +4,20 @@ def random_name_change(name):
     """Randomly changes one letter in a given name.
 
     Args:
-        name: The name to be changed.
+      name: The name to be changed.
 
     Returns:
-        A new string with one letter randomly changed.
+      A new string with one letter randomly changed.
     """
 
+    # Generate a random index within the range of the string length.
     random_index = random.randint(0, len(name) - 1)
-    random_char = chr(random.randint(ord('a'), ord('z')))
 
-    new_name = ""
-    for i in range(len(name)):
-        # Concatenate the random character at the random index, 
-        # and the original character at all other indices
-        new_name += random_char * (i == random_index) + name[i] * (i != random_index) 
+    # Generate a random replacement character.
+    random_character = chr(random.randint(ord('a'), ord('z')))
+
+    # Replace the character at the random index with the random character.
+    new_name = name[:random_index] + random_character + name[random_index + 1:]
 
     return new_name
 
