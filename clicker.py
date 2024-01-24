@@ -1,7 +1,8 @@
 import tkinter as tk
+from pynput.mouse import Button, Controller
+import keyboard
 import threading
 import time
-from pynput.mouse import Button, Controller
 
 class AutoClicker:
   def __init__(self):
@@ -18,6 +19,7 @@ class AutoClicker:
 
     self.start_button = tk.Button(self.root, text="Start", command=self.toggle_autoclicker)
     self.stop_button = tk.Button(self.root, text="Stop", command=self.toggle_autoclicker)  # Use the same function
+
     self.click_rate_label.grid(row=0, column=0)
     self.click_rate_entry.grid(row=0, column=1)
 
@@ -38,19 +40,25 @@ class AutoClicker:
             self.start_autoclicker()
 
   def start_autoclicker(self):
-        click_rate = int(self.click_rate_entry.get())
-        click_delay = int(self.click_delay_entry.get())
+       click_thread = threading.Thread(target=self.run_autoclicker)
+       click_thread.start()
 
-        self.running = True   # Set flag to True 
-        self.start_button.config(text="Stop")  # Update button text
+  def run_autoclicker(self):
+       click_rate = int(self.click_rate_entry.get())
+       click_delay = int(self.click_delay_entry.get())
 
-        while self.running:  # Continue clicking only if running is True
-            self.mouse.click(Button.left)
-            time.sleep(1 / click_rate)
+       while True:
+           self.mouse.click(Button.left)
+           time.sleep(click_delay / 1000)  # Convert delay to seconds
 
   def stop_autoclicker(self):
-        self.running = False  # Set flag to False
-        self.start_button.config(text="Start")  # Update button text
+       global click_thread
+       if click_thread.is_alive():
+           click_thread.join()  # Wait for the thread to finish
+
+   # Make click_thread a global variable
+  click_thread = None
 
 if __name__ == "__main__":
     autoclicker = AutoClicker()
+
