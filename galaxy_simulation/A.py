@@ -88,4 +88,5 @@ galaxy.add_planet("Sun", planet4)
 galaxy.remove_planet("Sun", "Mars")
 
 # Remove Proxima c moon
-galaxy.remove_moon("Proxima b", "Proxima c")
+planet3.remove_moon("Proxima c")
+print(galaxy.star_systems)
