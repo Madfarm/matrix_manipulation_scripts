@@ -1,67 +1,81 @@
 import random
 
 class CelestialBody:
-    def __init__(self, name, size, type):
-        self.name = name
-        self.size = size
-        self.type = type
+   def __init__(self, name, size, type):
+       self.name = name
+       self.size = size
+       self.type = type
 
 class Star(CelestialBody):
-    def __init__(self, name, size):
-        super().__init__(name, size, "Star")
+   def __init__(self, name, size):
+       super().__init__(name, size, "Star")
 
 class Planet(CelestialBody):
-    def __init__(self, name, size, type, has_moons=False):
-        super().__init__(name, size, type)
-        self.moons = []
-        self.has_moons = has_moons
+   def __init__(self, name, size, type, has_moons=False):
+       super().__init__(name, size, type)
+       self.moons = []
+       self.has_moons = has_moons
 
-    def add_moon(self, moon):
-        self.moons.append(moon)
-        self.has_moons = True
+   def add_moon(self, moon):
+       self.moons.append(moon)
+       self.has_moons = True
 
-    def remove_moon(self, moon_name):
-        for i, moon in enumerate(self.moons):
-            if moon.name == moon_name:
-                del self.moons[i]
-                return
-        print("Moon not found.")
+   def remove_moon(self, moon_name):
+       for i, moon in enumerate(self.moons):
+           if moon.name == moon_name:
+               del self.moons[i]
+               return
+       print("Moon not found.")
+
+   def __str__(self):
+       moon_names = ", ".join([moon.name for moon in self.moons]) if self.moons else "None"
+       return f"Planet {self.name}:\n" \
+              f"  Size: {self.size}\n" \
+              f"  Type: {self.type}\n" \
+              f"  Moons: {moon_names}"
 
 class Moon(CelestialBody):
-    def __init__(self, name, size):
-        super().__init__(name, size, "Moon")
+   def __init__(self, name, size):
+       super().__init__(name, size, "Moon")
 
 class Galaxy:
-    def __init__(self, name):
-        self.name = name
-        self.star_systems = []
+   def __init__(self, name):
+       self.name = name
+       self.star_systems = []
 
-    def add_star_system(self, star, planets=[]):
-        self.star_systems.append((star, planets))
+   def add_star_system(self, star, planets=[]):
+       self.star_systems.append((star, planets))
 
-    def remove_star_system(self, star_name):
-        for i, (star, planets) in enumerate(self.star_systems):
-            if star.name == star_name:
-                del self.star_systems[i]
-                return
-        print("Star system not found.")
+   def remove_star_system(self, star_name):
+       for i, (star, planets) in enumerate(self.star_systems):
+           if star.name == star_name:
+               del self.star_systems[i]
+               return
+       print("Star system not found.")
 
-    def add_planet(self, star_name, planet):
-        for star, planets in self.star_systems:
-            if star.name == star_name:
-                planets.append(planet)
-                return
-        print("Star system not found.")
+   def add_planet(self, star_name, planet):
+       for star, planets in self.star_systems:
+           if star.name == star_name:
+               planets.append(planet)
+               return
+       print("Star system not found.")
 
-    def remove_planet(self, star_name, planet_name):
-        for star, planets in self.star_systems:
-            if star.name == star_name:
-                for i, planet in enumerate(planets):
-                    if planet.name == planet_name:
-                        del planets[i]
-                        return
-                print("Planet not found.")
+   def remove_planet(self, star_name, planet_name):
+       for star, planets in self.star_systems:
+           if star.name == star_name:
+               for i, planet in enumerate(planets):
+                   if planet.name == planet_name:
+                       del planets[i]
+                       return
+               print("Planet not found.")
 
+   def __str__(self):
+       output = f"Galaxy {self.name}:\n"
+       for star, planets in self.star_systems:
+           output += f"  Star: {star.name}\n"
+           for planet in planets:
+               output += f"    {planet}\n"
+       return output
 # --- Example usage ---
 
 galaxy = Galaxy("Milky Way")
@@ -89,4 +103,4 @@ galaxy.remove_planet("Sun", "Mars")
 
 # Remove Proxima c moon
 planet3.remove_moon("Proxima c")
-print(galaxy.star_systems)
+print(galaxy)
