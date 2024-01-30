@@ -25,6 +25,10 @@ class Planet(CelestialBody):
                 return
         print("Moon not found.")
 
+    def __str__(self):
+        moon_str = "\n  Moons: " + ", ".join([m.name for m in self.moons]) if self.moons else ""
+        return f"Planet: {self.name} (Size: {self.size}, Type: {self.type}){moon_str}"
+
 class Moon(CelestialBody):
     def __init__(self, name, size):
         super().__init__(name, size, "Moon")
@@ -60,6 +64,14 @@ class Galaxy:
                         return
                 print("Planet not found.")
 
+    def __str__(self):
+        output = f"Galaxy: {self.name}\n"
+        for star, planets in self.star_systems:
+            output += f"Star System: {star.name}\n"
+            for planet in planets:
+                output += f"  {planet}\n"
+        return output
+
 # --- Example usage ---
 
 galaxy = Galaxy("Milky Way")
@@ -87,4 +99,4 @@ galaxy.remove_planet("Sun", "Mars")
 
 # Remove Proxima c moon
 planet3.remove_moon("Proxima c")
-print(galaxy.star_systems)
+print(galaxy)
