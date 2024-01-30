@@ -74,11 +74,11 @@ class Planet(CelestialBody):
               f"  Moons: {moon_names}"
 
 class Moon(CelestialBody):
-    def __init__(self, name, size, planet):
+  def __init__(self, name, size, planet):
         super().__init__(name, size, "Moon")
         self.planet = planet
 
-    def generate_location(self):
+  def generate_location(self):
         while True:
             x = self.planet.location[0] + random.randint(-2, 2)
             y = self.planet.location[1] + random.randint(-2, 2)
