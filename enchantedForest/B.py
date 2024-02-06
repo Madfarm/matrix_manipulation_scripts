@@ -59,6 +59,7 @@ whiskers = Mammal("Whiskers", "Shapeshifter Cat", "Mossy Caves", "Shapeshifting"
 
 forest.add_animal(sparkles)
 forest.add_animal(whiskers)
+forest.remove_animal("Whiskers")
 
 forest.display_animals()
 

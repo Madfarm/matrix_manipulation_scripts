@@ -4,40 +4,30 @@ class Animal:
         self.species = species
         self.habitat = habitat
 
-    def __str__(self):
-        return f"{self.name} ({self.species}) - Habitat: {self.habitat}"
+    def describe(self):
+        print(f"Name: {self.name}")
+        print(f"Species: {self.species}")
+        print(f"Habitat: {self.habitat}")
 
 class Bird(Animal):
-    def __init__(self, name, species, habitat, wingspan):
-        super().__init__(name, species, habitat)
-        self.wingspan = wingspan
-
-    def fly(self):
-        print(f"{self.name} spreads its wings and takes flight!")
-
-    def __str__(self):
-        return super().__str__() + f", Wingspan: {self.wingspan}"
-
-class Mammal(Animal):
-    def __init__(self, name, species, habitat, num_legs):
-        super().__init__(name, species, habitat)
-        self.num_legs = num_legs
-
-    def run(self):
-        print(f"{self.name} gallops away on its {self.num_legs} legs!")
-
-class EnchantedAnimal(Animal):
     def __init__(self, name, species, habitat, magical_ability):
         super().__init__(name, species, habitat)
         self.magical_ability = magical_ability
 
-    def perform_magic(self):
-        print(f"{self.name} uses its {self.magical_ability}!")
+    def describe(self):
+        super().describe()
+        print(f"Magical Ability: {self.magical_ability}")
 
-    def __str__(self):
-        return super().__str__() + f", Magical Ability: {self.magical_ability}"
+class Mammal(Animal):
+    def __init__(self, name, species, habitat, magical_ability):
+        super().__init__(name, species, habitat)
+        self.magical_ability = magical_ability
 
-class Forest:
+    def describe(self):
+        super().describe()
+        print(f"Magical Ability: {self.magical_ability}")
+
+class EnchantedForest:
     def __init__(self):
         self.animals = []
 
@@ -45,72 +35,40 @@ class Forest:
         self.animals.append(animal)
 
     def remove_animal(self, name):
-        for animal in self.animals:
-            if animal.name == name:
-                self.animals.remove(animal)
-                print(f"{name} has been removed from the forest.")
-                return
-        print(f"{name} not found in the forest.")
+        self.animals = [a for a in self.animals if a.name != name]
 
     def display_animals(self):
-        if not self.animals:
-            print("The forest is currently empty.")
-        else:
-            for animal in self.animals:
-                print(animal)
+        for animal in self.animals:
+            animal.describe()
+            print("-" * 10)
 
     def find_by_name(self, name):
-        for animal in self.animals:
-            if animal.name == name:
-                return animal
-        return None
+        return [a for a in self.animals if a.name == name]
 
     def find_by_species(self, species):
-        return [animal for animal in self.animals if animal.species == species]
+        return [a for a in self.animals if a.species == species]
 
-    def find_by_magical_ability(self, ability):
-        return [animal for animal in self.animals if isinstance(animal, EnchantedAnimal) and animal.magical_ability == ability]
+    def find_by_ability(self, ability):
+        return [a for a in self.animals if a.magical_ability == ability]
+    
+    def find_by_habitat(self, habitat):
+        return [a for a in self.animals if a.habitat == habitat]
 
-# Create the forest
-forest = Forest()
 
-# Add some animals
-forest.add_animal(Bird("Flit", "Hummingbird", "Flower meadow", "0.5 ft"))
-forest.add_animal(Mammal("Dash", "Deer", "Woodland", 4))
-forest.add_animal(EnchantedAnimal("Sparkle", "Unicorn", "Glade of Dreams", "Healing"))
-forest.add_animal(EnchantedAnimal("Willow", "Wisp", "Misty Swamp", "Invisibility"))
+forest = EnchantedForest()
 
-# Interact with the forest
-while True:
-    print("\nWhat would you like to do?")
-    print("1. Add an animal")
-    print("2. Remove an animal")
-    print("3. Display all animals")
-    print("4. Find animal by name")
-    print("5. Find animals by species")
-    print("6. Find animals by magical ability")
-    print("7. Exit")
+sparkles = Bird("Sparkles", "Phoenix", "Volcanic Mountains", "Rebirth")
+whiskers = Mammal("Whiskers", "Shapeshifter Cat", "Mossy Caves", "Shapeshifting")
+bubbles = Mammal("Bubbles", "Kelpie", "Crystal River", "Water Manipulation")
 
-    choice = input("Enter your choice: ")
+forest.add_animal(bubbles)
+forest.add_animal(sparkles)
+forest.add_animal(whiskers)
 
-    if choice == "1":
-        # ... (add animal logic here)
-        pass
-    elif choice == "2":
-        # ... (remove animal logic here)
-        pass
-    elif choice == "3":
-        forest.display_animals()
-    elif choice == "4":
-        # ... (find by name logic here)
-        pass
-    elif choice == "5":
-        # ... (find by species logic here)
-        pass
-    elif choice == "6":
-        # ... (find by magical ability logic here)
-        pass
-    elif choice == "7":
-        break
-    else:
-        print("Invalid choice.")
+print(forest.find_by_habitat("Volcanic Mountains"))  # [Sparkles]
+print(forest.find_by_habitat("Crystal River"))     # [Bubbles]
+forest.remove_animal("Whiskers")
+
+forest.display_animals()
+
+print(forest.find_by_ability("Shapeshifting")) 
