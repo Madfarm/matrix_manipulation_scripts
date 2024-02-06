@@ -50,6 +50,9 @@ class EnchantedForest:
 
     def find_by_ability(self, ability):
         return [a for a in self.animals if a.magical_ability == ability]
+    
+    def find_by_habitat(self, habitat):
+        return [a for a in self.animals if a.habitat == habitat]
 
 
 forest = EnchantedForest()
@@ -63,4 +66,5 @@ forest.remove_animal("Whiskers")
 
 forest.display_animals()
 
-print(forest.find_by_ability("Shapeshifting")) 
+print(forest.find_by_ability("Shapeshifting"))
+print(forest.find_by_habitat("Volcanic Mountains")) 
