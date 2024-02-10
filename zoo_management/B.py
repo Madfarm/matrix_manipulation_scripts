@@ -1,8 +1,11 @@
 class Animal:
-    def __init__(self):
+    def __init__(self, age):
         self.hasBeenFed = False
+        self.hasSlept = False
+        self.age = age
 
     def sleep(self):
+        self.hasSlept = True
         return "Zzz..."
 
     def eat(self):
@@ -12,10 +15,17 @@ class Animal:
             return "Munch munch! *hungry*"
 
     def makeSound(self):
-        return "..."
+        if self.age < 2:
+            return "Wah wah wah!"
+        else:
+            return "..."
 
 class Elephant(Animal):
+    def __init__(self, age):
+        super().__init__(age)
+
     def sleep(self):
+        self.hasSlept = True
         return "Trumpet trumpet! *snore*"
 
     def eat(self):
@@ -25,10 +35,17 @@ class Elephant(Animal):
             return "Munch munch! *crunch crunch* *hungry*"
 
     def makeSound(self):
-        return "Trumpet trumpet!"
+        if self.age < 2:
+            return "Toot toot toot!"
+        else:
+            return "Trumpet trumpet!"
 
 class Tiger(Animal):
+    def __init__(self, age):
+        super().__init__(age)
+
     def sleep(self):
+        self.hasSlept = True
         return "Rrrrr... *yawn*"
 
     def eat(self):
@@ -38,10 +55,17 @@ class Tiger(Animal):
             return "Gobble gobble! *chomp chomp* *hungry*"
 
     def makeSound(self):
-        return "Rrrrr..."
+        if self.age < 2:
+            return "Rrrow rrrow!"
+        else:
+            return "Rrrrr..."
 
 class Horse(Animal):
+    def __init__(self, age):
+        super().__init__(age)
+
     def sleep(self):
+        self.hasSlept = True
         return "Neigh... *whinny*"
 
     def eat(self):
@@ -51,17 +75,23 @@ class Horse(Animal):
             return "Munch munch! *chomp chomp* *hungry*"
 
     def makeSound(self):
-        return "Neigh!"
+        if self.age < 2:
+            return "Neeeigh!"
+        else:
+            return "Neigh!"
 
 class Zoo:
     def __init__(self):
         self.animals = []
         self.num_animals = 0
         self.num_unfed_animals = 0
+        self.num_young_animals = 0
 
     def add_animal(self, animal):
         self.animals.append(animal)
         self.num_animals += 1
+        if animal.age < 2:
+            self.num_young_animals += 1
 
     def feed_animals(self):
         for animal in self.animals:
@@ -72,17 +102,20 @@ class Zoo:
         for animal in self.animals:
             print(animal.makeSound())
 
-    def get_num_unfed_animals(self):
-        return self.num_unfed_animals
-
     def get_num_animals(self):
         return self.num_animals
 
+    def get_num_unfed_animals(self):
+        return self.num_unfed_animals
+
+    def get_num_young_animals(self):
+        return self.num_young_animals
+
 # Create a zoo with some animals
 zoo = Zoo()
-zoo.add_animal(Elephant())
-zoo.add_animal(Tiger())
-zoo.add_animal(Horse())
+zoo.add_animal(Elephant(1))
+zoo.add_animal(Tiger(3))
+zoo.add_animal(Horse(2))
 
 # Test the zoo methods
 print("Making sounds:")
@@ -91,3 +124,4 @@ print("\nFeeding animals:")
 zoo.feed_animals()
 print("\nNumber of animals:", zoo.get_num_animals())
 print("Number of unfed animals:", zoo.get_num_unfed_animals())
+print("Number of young animals:", zoo.get_num_young_animals())
