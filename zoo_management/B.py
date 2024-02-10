@@ -1,32 +1,58 @@
 class Animal:
     def __init__(self, name):
         self.name = name
-
-    def eat(self):
-        print(f"{self.name} is eating.")
-
+    
     def sleep(self):
-        print(f"{self.name} is sleeping.")
-
-    def makeSound(self):
-        raise NotImplementedError("Subclasses should implement this method.")
-
-class Lion(Animal):
-    def makeSound(self):
-        return "Roar!"
+        return "Zzz..."
+    
+    def eat(self):
+        return "Munch munch!"
 
 class Elephant(Animal):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def sleep(self):
+        return "Trumpet trumpet! *snore*"
+    
+    def eat(self):
+        return "Munching on some tasty leaves!"
+    
     def makeSound(self):
-        return "Trumpet!"
+        return "Trumpet trumpet!"
 
-# Test the classes
-lion = Lion("Leo")
-elephant = Elephant("Ella")
+class Tiger(Animal):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def sleep(self):
+        return "Rrrrr... *yawn*"
+    
+    def eat(self):
+        return "Crunching on some fresh meat!"
+    
+    def makeSound(self):
+        return "Rrrrr..."
 
-lion.eat()
-lion.sleep()
-print(f"{lion.name} says {lion.makeSound()}")
+class Horse(Animal):
+    def __init__(self, name):
+        super().__init__(name)
+    
+    def sleep(self):
+        return "Neigh... *snore*"
+    
+    def eat(self):
+        return "Munching on some juicy hay!"
+    
+    def makeSound(self):
+        return "Neigh!"
 
-elephant.eat()
-elephant.sleep()
-print(f"{elephant.name} says {elephant.makeSound()}")
+# Create some animals
+my_elephant = Elephant("Babar")
+my_tiger = Tiger("Shere Khan")
+my_horse = Horse("Black Beauty")
+
+# Test the methods
+print(my_elephant.sleep())  # Trumpet trumpet! *snore*
+print(my_tiger.eat())  # Crunching on some fresh meat!
+print(my_horse.makeSound())  # Neigh!
