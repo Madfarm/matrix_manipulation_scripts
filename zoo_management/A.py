@@ -35,18 +35,35 @@ class Horse(Animal):
     def makeSound(self):
         return "Neigh!"
 
-# Test the classes
-my_elephant = Elephant()
-print(my_elephant.sleep())  # Output: Trumpet trumpet! *snore*
-print(my_elephant.eat())  # Output: Munch munch! *crunch crunch*
-print(my_elephant.makeSound())  # Output: Trumpet trumpet!
+class Zoo:
+    def __init__(self):
+        self.animals = []
 
-my_tiger = Tiger()
-print(my_tiger.sleep())  # Output: Rrrrr... *yawn*
-print(my_tiger.eat())  # Output: Gobble gobble! *chomp chomp*
-print(my_tiger.makeSound())  # Output: Rrrrr...
+    def add_animal(self, animal):
+        self.animals.append(animal)
 
-my_horse = Horse()
-print(my_horse.sleep())  # Output: Neigh... *whinny*
-print(my_horse.eat())  # Output: Munch munch! *chomp chomp*
-print(my_horse.makeSound())  # Output: Neigh!
+    def make_sounds(self):
+        for animal in self.animals:
+            print(animal.makeSound())
+
+    def feed_animals(self):
+        for animal in self.animals:
+            print(animal.eat())
+
+    def put_animals_to_sleep(self):
+        for animal in self.animals:
+            print(animal.sleep())
+
+# Create a zoo with some animals
+zoo = Zoo()
+zoo.add_animal(Elephant())
+zoo.add_animal(Tiger())
+zoo.add_animal(Horse())
+
+# Test the zoo methods
+print("Making sounds:")
+zoo.make_sounds()
+print("\nFeeding animals:")
+zoo.feed_animals()
+print("\nPutting animals to sleep:")
+zoo.put_animals_to_sleep()
