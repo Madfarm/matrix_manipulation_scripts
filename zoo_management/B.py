@@ -1,16 +1,28 @@
 class Animal:
+    def __init__(self):
+        self.hasBeenFed = False
+
     def sleep(self):
         return "Zzz..."
 
     def eat(self):
-        return "Munch munch!"
+        if self.hasBeenFed:
+            return "Munch munch! *burp*"
+        else:
+            return "Munch munch! *hungry*"
+
+    def makeSound(self):
+        return "..."
 
 class Elephant(Animal):
     def sleep(self):
         return "Trumpet trumpet! *snore*"
 
     def eat(self):
-        return "Munch munch! *crunch crunch*"
+        if self.hasBeenFed:
+            return "Munch munch! *crunch crunch* *burp*"
+        else:
+            return "Munch munch! *crunch crunch* *hungry*"
 
     def makeSound(self):
         return "Trumpet trumpet!"
@@ -20,7 +32,10 @@ class Tiger(Animal):
         return "Rrrrr... *yawn*"
 
     def eat(self):
-        return "Gobble gobble! *chomp chomp*"
+        if self.hasBeenFed:
+            return "Gobble gobble! *chomp chomp* *burp*"
+        else:
+            return "Gobble gobble! *chomp chomp* *hungry*"
 
     def makeSound(self):
         return "Rrrrr..."
@@ -30,7 +45,10 @@ class Horse(Animal):
         return "Neigh... *whinny*"
 
     def eat(self):
-        return "Munch munch! *chomp chomp*"
+        if self.hasBeenFed:
+            return "Munch munch! *chomp chomp* *burp*"
+        else:
+            return "Munch munch! *chomp chomp* *hungry*"
 
     def makeSound(self):
         return "Neigh!"
@@ -38,43 +56,38 @@ class Horse(Animal):
 class Zoo:
     def __init__(self):
         self.animals = []
+        self.num_animals = 0
+        self.num_unfed_animals = 0
 
     def add_animal(self, animal):
         self.animals.append(animal)
-
-    def make_sounds(self):
-        sounds = []
-        for animal in self.animals:
-            sounds.append(animal.makeSound())
-        return sounds
+        self.num_animals += 1
 
     def feed_animals(self):
         for animal in self.animals:
+            animal.hasBeenFed = True
             print(animal.eat())
 
-    def put_animals_to_sleep(self):
+    def make_sounds(self):
         for animal in self.animals:
-            print(animal.sleep())
+            print(animal.makeSound())
 
-# Create a zoo and add some animals
-my_zoo = Zoo()
-my_zoo.add_animal(Elephant())
-my_zoo.add_animal(Tiger())
-my_zoo.add_animal(Horse())
+    def get_num_unfed_animals(self):
+        return self.num_unfed_animals
 
-# Make the animals make sounds
-print(my_zoo.make_sounds())  # Output: ["Trumpet trumpet!", "Rrrrr...", "Neigh!"]
+    def get_num_animals(self):
+        return self.num_animals
 
-# Feed the animals
-my_zoo.feed_animals()
-# Output:
-# Munch munch! *crunch crunch*
-# Gobble gobble! *chomp chomp*
-# Munch munch! *chomp chomp*
+# Create a zoo with some animals
+zoo = Zoo()
+zoo.add_animal(Elephant())
+zoo.add_animal(Tiger())
+zoo.add_animal(Horse())
 
-# Put the animals to sleep
-my_zoo.put_animals_to_sleep()
-# Output:
-# Trumpet trumpet! *snore*
-# Rrrrr... *yawn*
-# Neigh... *whinny*
+# Test the zoo methods
+print("Making sounds:")
+zoo.make_sounds()
+print("\nFeeding animals:")
+zoo.feed_animals()
+print("\nNumber of animals:", zoo.get_num_animals())
+print("Number of unfed animals:", zoo.get_num_unfed_animals())
