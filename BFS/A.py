@@ -1,17 +1,31 @@
 from typing import Optional
 
-def bfs(node, level=0):
+def bfs(node, level=0, queue=None):
     if node is None:
         return
 
-    # Visit the node
-    print(node.val)
+    # Initialize the queue if not provided
+    if queue is None:
+        queue = []
 
-    # Recursively visit left child
-    bfs(node.left, level+1)
+    # Enqueue the node
+    queue.append(node)
 
-    # Recursively visit right child
-    bfs(node.right, level+1)
+    # Recursively visit the node's children
+    if node.left:
+        bfs(node.left, level+1, queue)
+    if node.right:
+        bfs(node.right, level+1, queue)
+
+    # If the node has no children, dequeue and visit it
+    if not node.left and not node.right:
+        queue.pop(0)
+        print(node.val)
+
+    # Recursively visit the next node in the queue
+    if queue:
+        bfs(queue[0], level, queue)
+
 
 
 class Node:

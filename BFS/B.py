@@ -25,27 +25,29 @@ root.right.left.right = Node(13)
 root.right.right.left = Node(14)
 root.right.right.right = Node(15)
 
-def bfs(node, level=0):
+def lot(node, level=0):
     if node is None:
         return
 
     # Visit the node
     print(node.val)
 
-    # Recursively visit left child
-    bfs(node.left, level+1)
-
-    # Recursively visit right child
-    bfs(node.right, level+1)
-
     # Recursively visit siblings at the same level
     if node.left:
-        bfs(node.left.right, level+1)
+        lot(node.left, level)
     if node.right:
-        bfs(node.right.left, level+1)
+        lot(node.right, level)
+
+    # Recursively visit children at the next level
+    if node.left:
+        lot(node.left.left, level + 1)
+        lot(node.left.right, level + 1)
+    if node.right:
+        lot(node.right.left, level + 1)
+        lot(node.right.right, level + 1)
 
 
 
 
 
-bfs(root)  # Output: 1, 2, 3
+lot(root)  # Output: 1, 2, 3
