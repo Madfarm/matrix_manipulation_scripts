@@ -20,6 +20,7 @@ class Animal:
         return f"Species: {self.species}, Space Region: {self.space_region.name}, Date of Discovery: {self.date_of_discovery}, ID: {self.id}"
 
 animals = []
+space_regions = []
 
 def add_animal():
     species = input("Enter species name: ")
@@ -35,6 +36,15 @@ def add_animal():
     animal = Animal(species, space_region, date_of_discovery, id)
     animals.append(animal)
     print(f"Added animal: {animal.get_info()}")
+
+def add_space_region():
+    name = input("Enter space region name: ")
+    temperature = int(input("Enter temperature (°C): "))
+    gravity = int(input("Enter gravity (g): "))
+
+    space_region = SpaceRegion(name, temperature, gravity)
+    space_regions.append(space_region)
+    print(f"Added space region: {space_region.name}")
 
 def find_animals_by_region():
     space_region_name = input("Enter space region name: ")
@@ -73,11 +83,10 @@ def find_animals_by_timeframe():
         for animal in animals_in_timeframe:
             print(animal.get_info())
 
-space_regions = [
-    SpaceRegion("Alpha Centauri", 20, 0.8),
-    SpaceRegion("Andromeda", 10, 1.2),
-    SpaceRegion("Milky Way", 25, 1.0)
-]
+def display_all_animals():
+    print("All animals:")
+    for animal in animals:
+        print(animal.get_info())
 
 print("Welcome to the Animal Tracker console application!")
 
@@ -85,9 +94,11 @@ while True:
     print("""
     Menu:
     1. Add animal
-    2. Find animals by region
-    3. Find animals by timeframe
-    4. Quit
+    2. Add space region
+    3. Find animals by region
+    4. Find animals by timeframe
+    5. Display all animals
+    6. Quit
     """)
 
     choice = input("Enter choice: ")
@@ -95,10 +106,14 @@ while True:
     if choice == "1":
         add_animal()
     elif choice == "2":
-        find_animals_by_region()
+        add_space_region()
     elif choice == "3":
-        find_animals_by_timeframe()
+        find_animals_by_region()
     elif choice == "4":
+        find_animals_by_timeframe()
+    elif choice == "5":
+        display_all_animals()
+    elif choice == "6":
         print("Goodbye!")
         break
     else:

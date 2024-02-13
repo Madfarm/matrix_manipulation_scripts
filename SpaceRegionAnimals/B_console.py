@@ -19,79 +19,101 @@ class Animal:
     def get_info(self):
         return f"Species: {self.species}, Space Region: {self.space_region.name}, Date of Discovery: {self.date_of_discovery}, ID: {self.id}"
 
+space_regions = []
+animals = []
+
+def add_space_region():
+    name = input("Enter space region name: ")
+    temperature = int(input("Enter temperature (°C): "))
+    gravity = int(input("Enter gravity (g): "))
+    space_region = SpaceRegion(name, temperature, gravity)
+    space_regions.append(space_region)
+    print(f"Added space region: {space_region.name}")
+
 def add_animal():
     species = input("Enter species name: ")
     space_region_name = input("Enter space region name: ")
-    date_of_discovery = datetime.date.today()  # default to today's date
-    id = len(animals_list) + 1  # assign a new ID
+    date_of_discovery = datetime.date.today()
+    id = len(animals) + 1
 
-    # find the space region object
     space_region = next((region for region in space_regions if region.name == space_region_name), None)
     if space_region is None:
-        print(f"Error: Space region '{space_region_name}' not found!")
+        print(f"Error: Space region '{space_region_name}' not found.")
         return
 
-    # create a new animal object
     animal = Animal(species, space_region, date_of_discovery, id)
-    animals_list.append(animal)
+    animals.append(animal)
     print(f"Added animal: {animal.get_info()}")
 
 def find_animals_by_region():
-    region_name = input("Enter space region name: ")
-    region = next((region for region in space_regions if region.name == region_name), None)
-    if region is None:
-        print(f"Error: Space region '{region_name}' not found!")
+    space_region_name = input("Enter space region name: ")
+    space_region = next((region for region in space_regions if region.name == space_region_name), None)
+    if space_region is None:
+        print(f"Error: Space region '{space_region_name}' not found.")
         return
 
-    animals = find_animals_by_space_region(region)
-    if len(animals) == 0:
-        print(f"No animals found in region '{region.name}'")
+    animals_in_region = [animal for animal in animals if animal.space_region == space_region]
+    if len(animals_in_region) == 0:
+        print(f"No animals found in region '{space_region_name}'.")
     else:
-        print("Animals found in region '{region.name}':")
-        for animal in animals:
+        print("Animals found in region '{space_region_name}':")
+        for animal in animals_in_region:
             print(animal.get_info())
 
 def find_animals_by_timeframe():
-    start_date_str = input("Enter start date (YYYY-MM-DD): ")
-    start_date = datetime.date.fromisoformat(start_date_str)
+    start_date = datetime.date.today() - datetime.timedelta(days=30)
+    end_date = datetime.date.today()
 
-    end_date_str = input("Enter end date (YYYY-MM-DD): ")
-    end_date = datetime.date.fromisoformat(end_date_str)
+    start_date_str = input(f"Enter start date (YYYY-MM-DD): ")
+    end_date_str = input(f"Enter end date (YYYY-MM-DD): ")
 
-    animals = find_animals_by_timeframe(start_date, end_date)
-    if len(animals) == 0:
-        print(f"No animals found in timeframe '{start_date_str}' to '{end_date_str}'")
+    try:
+        start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").date()
+        end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").date()
+    except ValueError:
+        print("Invalid date format. Please enter dates in the format YYYY-MM-DD.")
+        return
+
+    animals_in_timeframe = [animal for animal in animals if start_date <= animal.date_of_discovery <= end_date]
+    if len(animals_in_timeframe) == 0:
+        print(f"No animals found in timeframe '{start_date_str}' to '{end_date_str}'.")
     else:
-        print("Animals found in timeframe '{start_date_str}' to '{end_date_str}':")
-        for animal in animals:
+        print(f"Animals found in timeframe '{start_date_str}' to '{end_date_str}':")
+        for animal in animals_in_timeframe:
             print(animal.get_info())
 
-# init space regions
-space_regions = [
-    SpaceRegion("Alpha Centauri", 20, 0.8),
-    SpaceRegion("Andromeda", 10, 1.2),
-    SpaceRegion("Milky Way", 25, 1.0)
-]
+def display_all_animals():
+    print("All animals:")
+    for animal in animals:
+        print(animal.get_info())
 
-# init animals list
-animals_list = []
+print("Welcome to the Animal Tracker console application!")
 
 while True:
-    print("Menu:")
-    print("  A) Add animal")
-    print("  R) Find animals by region")
-    print("  T) Find animals by timeframe")
-    print("  Q) Quit")
+    print("""
+    Menu:
+    1. Add space region
+    2. Add animal
+    3. Find animals by region
+    4. Find animals by timeframe
+    5. Display all animals
+    6. Quit
+    """)
 
     choice = input("Enter choice: ")
 
-    if choice.lower() == "a":
+    if choice == "1":
+        add_space_region()
+    elif choice == "2":
         add_animal()
-    elif choice.lower() == "r":
+    elif choice == "3":
         find_animals_by_region()
-    elif choice.lower() == "t":
+    elif choice == "4":
         find_animals_by_timeframe()
-    elif choice.lower() == "q":
+    elif choice == "5":
+        display_all_animals()
+    elif choice == "6":
+        print("Goodbye!")
         break
     else:
-        print("Invalid choice!")
+        print("Invalid choice. Please try again.")
