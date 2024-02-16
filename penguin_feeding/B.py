@@ -2,6 +2,7 @@ import random
 
 # Define the penguins and their identifiers
 penguins = {"Penny": 0, "Percy": 1, "Pete": 2, "Paula": 3, "Pierre": 4, "Emperor": 5}
+meal_counts = {penguin: 0 for penguin in penguins}  # Initialize meal counts to
 
 # Define the meal counter and the most-fed penguin
 meals_served = 0
@@ -20,6 +21,7 @@ while meals_served < 100:  # Simulate 100 meals
     # Serve meals to the penguins in the queue
     for penguin in penguins:
         if penguins[penguin] > 0:  # If the penguin is in the queue
+            meal_counts[penguin] += 1  # Increment the meal count for the penguin
             if penguin == "Emperor":  # Emperor Penguin eats last and twice
                 meals_served += 2
                 penguins["Emperor"] += 2
@@ -39,3 +41,7 @@ while meals_served < 100:  # Simulate 100 meals
 print("Meals served:", meals_served)
 print("Most-fed penguin:", most_fed_penguin)
 print("Number of meals eaten by the most-fed penguin:", penguins[most_fed_penguin])
+
+# Print the number of meals each penguin ate
+for penguin, meals in meal_counts.items():
+    print(f"{penguin}: {meals} meals")
