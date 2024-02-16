@@ -20,16 +20,14 @@ while meals_served < 100:  # Simulate 100 meals
     # Serve meals to the penguins in the queue
     for penguin in penguins:
         if penguins[penguin] > 0:  # If the penguin is in the queue
-            if random.random() < 0.2:  # 20% chance to get impatient and skip a turn
-                penguins[penguin] += 1  # Increment the penguin's queue position
+            if penguin == "Emperor":  # Emperor Penguin eats last and twice
+                meals_served += 1
+                penguins["Emperor"] += 2
+                penguins["Emperor"] -= 2  # Decrement the Emperor's queue position twice
             else:
                 # Serve a meal to the penguin
                 meals_served += 1
-                if penguin == "Emperor":  # Emperor Penguin eats twice
-                    meals_served += 1
-                    penguins["Emperor"] += 2
-                else:
-                    penguins[penguin] -= 1  # Decrement the penguin's queue position
+                penguins[penguin] -= 1  # Decrement the penguin's queue position
 
     # Identify the most-fed penguin
     if most_fed_penguin is None or penguins[penguin] > penguins[most_fed_penguin]:
