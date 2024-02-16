@@ -7,6 +7,7 @@ meal_counts = {penguin: 0 for penguin in penguins}  # Initialize meal counts to
 # Define the meal counter and the most-fed penguin
 meals_served = 0
 most_fed_penguin = None
+max_meals = 0
 
 while meals_served < 100:  # Simulate 100 meals
     # Randomly select a penguin to join or leave the queue
@@ -22,6 +23,9 @@ while meals_served < 100:  # Simulate 100 meals
     for penguin in penguins:
         if penguins[penguin] > 0:  # If the penguin is in the queue
             meal_counts[penguin] += 1  # Increment the meal count for the penguin
+            if meal_counts[penguin] > max_meals:
+                max_meals = meal_counts[penguin]
+                most_fed_penguin = penguin
             if penguin == "Emperor":  # Emperor Penguin eats last and twice
                 meals_served += 2
                 penguins["Emperor"] += 2
@@ -33,6 +37,8 @@ while meals_served < 100:  # Simulate 100 meals
                 # Serve a meal to the penguin
                 meals_served += 1
                 penguins[penguin] -= 1  # Decrement the penguin's queue position
+
+            
 
     # Identify the most-fed penguin
     if most_fed_penguin is None or penguins[penguin] > penguins[most_fed_penguin]:
