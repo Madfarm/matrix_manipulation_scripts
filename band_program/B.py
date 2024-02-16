@@ -1,11 +1,16 @@
-import random
-
 class Instrument:
-    def __init__(self, sound):
+    def __init__(self, sound, tuned=False):
         self.sound = sound
+        self.tuned = tuned
 
     def play(self):
-        return self.sound
+        if self.tuned:
+            return self.sound
+        else:
+            return "out of tune"
+
+    def tune(self):
+        self.tuned = True
 
 class Guitar(Instrument):
     def __init__(self):
@@ -39,6 +44,10 @@ class Band:
             sounds.append(member.play())
         return " ".join(sounds)
 
+    def tune_instruments(self):
+        for member in self.members:
+            member.tune()
+
 # Create band members
 guitarist = Guitar()
 drummer = Drums()
@@ -53,5 +62,11 @@ music_type = "Rock"
 
 my_band = Band(band_name, band_members, music_type)
 
-# Simulate a performance
+# Simulate a performance before tuning
+print(my_band.perform())
+
+# Tune the instruments
+my_band.tune_instruments()
+
+# Simulate a performance after tuning
 print(my_band.perform())
