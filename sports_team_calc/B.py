@@ -1,68 +1,73 @@
-from itertools import combinations
 import numpy as np
+import itertools
 
-def weighted_sum(stats, weights):
-    return np.dot(stats, weights)
-
-def team_performance(team, stats, weights):
-    return weighted_sum(np.array(team).T @ stats, weights)
-
-def team_cost(team):
-    return np.sum(team[:, 1])
-
-def compose_team(candidates, roles, min_players, max_players, budget, weights):
-    # Filter candidates by role and cost
-    filtered_candidates = []
-    for role in roles:
-        candidates_in_role = [c for c in candidates if c[2] == role]
-        candidates_in_role.sort(key=lambda x: x[1])  # Sort by cost
-        filtered_candidates.extend(candidates_in_role[:max_players[role]])
+# Helper functions
+def satisfies_constraints(combination, roles, min_players_per_role, max_players_per_role):
+    # Count the number of players in each role
+    role_counts = [0] * len(roles)
+    for player in combination:
+        role_counts[roles.index(player['role'])] += 1
     
-    # Compute all possible team combinations
-    teams = list(combinations(filtered_candidates, len(roles)))
-    
-    # Filter teams by budget and composition constraints
-    valid_teams = []
-    for team in teams:
-        if team_cost(team) <= budget and all(min_players[role] <= team.count(role) <= max_players[role] for role in roles):
-            valid_teams.append(team)
-    
-    # Compute performance scores for valid teams
-    performance_scores = [team_performance(team, stats, weights) for team in valid_teams]
-    
-    # Return the team with the highest performance score
-    return valid_teams[np.argmax(performance_scores)]
+    # Check if the counts satisfy the constraints
+    for i, (min_count, max_count) in enumerate(zip(min_players_per_role, max_players_per_role)):
+        if role_counts[i] < min_count or role_counts[i] > max_count:
+            return False
+    return True
 
-# Example usage
-stats = np.array([
-    [10, 5, 3, 8, 2],  # Speed, Accuracy, Strength, Experience, Other
-    [8, 6, 4, 5, 1],
-    [6, 8, 5, 7, 3],
-    [4, 9, 2, 6, 4],
-    [7, 4, 6, 3, 5],
-    [5, 7, 8, 4, 2],
-    [9, 3, 1, 2, 6],
-    [2, 1, 9, 1, 8],
-    [3, 2, 7, 9, 1],
-])
-weights = np.array([0.4, 0.3, 0.1, 0.1, 0.1])  # Weights for each statistic
+def calculate_score(combination, weights):
+    # Calculate the weighted sum of the players' statistics
+    score = 0
+    for player in combination:
+        for stat, weight in zip(player.values(), weights):
+            score += weight * stat
+    return score
 
-roles = ['Defender', 'Midfielder', 'Forward']
-min_players = {'Defender': 3, 'Midfielder': 4, 'Forward': 3}
-max_players = {'Defender': 5, 'Midfielder': 6, 'Forward': 5}
-budget = 100  # Team budget in thousands
 
-candidates = [
-    [10, 5, 'Defender', 10],
-    [8, 6, 'Defender', 8],
-    [6, 8, 'Midfielder', 7],
-    [4, 9, 'Midfielder', 6],
-    [7, 4, 'Forward', 5],
-    [5, 7, 'Forward', 4],
-    [9, 3, 'Defender', 3],
-    [2, 1, 'Midfielder', 2],
-    [3, 2, 'Forward', 1],
+
+# Define the team composition constraints
+roles = ['GK', 'DF', 'MF', 'FW']
+min_players_per_role = [1, 3, 4, 2]
+max_players_per_role = [2, 5, 6, 3]
+
+# Define the candidate players with their statistics and cost
+players = [
+    {'name': 'Player1', 'speed': 80, 'accuracy': 70, 'strength': 60, 'experience': 80, 'cost': 10000},
+    {'name': 'Player2', 'speed': 90, 'accuracy': 60, 'strength': 70, 'experience': 70, 'cost': 12000},
+    {'name': 'Player3', 'speed': 70, 'accuracy': 80, 'strength': 50, 'experience': 90, 'cost': 9000},
+    # Add more players here...
 ]
 
-team = compose_team(candidates, roles, min_players, max_players, budget, weights)
-print(team)
+
+# Define the weights for each statistic
+weights = [0.3, 0.2, 0.15, 0.35]  # speed, accuracy, strength, experience
+
+# Define the budget
+budget = 50000
+
+# Initialize the best team and its score
+best_team = []
+best_score = 0
+
+# Generate combinations of players with preserved roles
+combinations = list(itertools.product(*[player.keys() for player in players]))
+# Iterate through all possible team combinations
+for combination in combinations:
+    # Check if the combination satisfies the team composition constraints
+    if satisfies_constraints(combination, roles, min_players_per_role, max_players_per_role):
+        # Calculate the total cost of the combination
+        total_cost = sum(player['cost'] for player in combination)
+        
+        # Check if the combination is within budget
+        if total_cost <= budget:
+            # Calculate the overall performance score for the combination
+            score = calculate_score(combination, weights)
+            
+            # Update the best team and its score if the current combination is better
+            if score > best_score:
+                best_team = combination
+                best_score = score
+
+# Print the best team and its score
+print("Best Team:", [player['name'] for player in best_team])
+print("Best Score:", best_score)
+

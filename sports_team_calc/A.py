@@ -6,7 +6,7 @@ def satisfies_constraints(combination, roles, min_players_per_role, max_players_
     # Count the number of players in each role
     role_counts = [0] * len(roles)
     for player in combination:
-        role_counts[roles.index(player['role'])] += 1
+        role_counts[player['role']] += 1
     
     # Check if the counts satisfy the constraints
     for i, (min_count, max_count) in enumerate(zip(min_players_per_role, max_players_per_role)):
@@ -37,6 +37,7 @@ players = [
     # Add more players here...
 ]
 
+
 # Define the weights for each statistic
 weights = [0.3, 0.2, 0.15, 0.35]  # speed, accuracy, strength, experience
 
@@ -47,8 +48,10 @@ budget = 50000
 best_team = []
 best_score = 0
 
+# Generate combinations of players with preserved roles
+combinations = list(itertools.product(*[player.keys() for player in players]))
 # Iterate through all possible team combinations
-for combination in itertools.combinations(players, len(roles)):
+for combination in combinations:
     # Check if the combination satisfies the team composition constraints
     if satisfies_constraints(combination, roles, min_players_per_role, max_players_per_role):
         # Calculate the total cost of the combination
