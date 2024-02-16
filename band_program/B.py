@@ -3,11 +3,16 @@ class Instrument:
         self.sound = sound
         self.tuned = tuned
 
-    def play(self):
-        if self.tuned:
-            return self.sound
+    def play(self, song):
+        if not self.tuned:
+            print("Instrument out of tune!")
         else:
-            return "out of tune"
+            if song == "Song 1":
+                return self.sound + " (Song 1 version)"
+            elif song == "Song 2":
+                return self.sound + " (Song 2 version)"
+            else:
+                return self.sound
 
     def tune(self):
         self.tuned = True
@@ -33,20 +38,17 @@ class Vocals(Instrument):
         super().__init__("singy")
 
 class Band:
-    def __init__(self, name, members, music_type):
+    def __init__(self, name, members, music_type, songs):
         self.name = name
         self.members = members
         self.music_type = music_type
+        self.songs = songs
 
-    def perform(self):
+    def perform(self, song):
         sounds = []
         for member in self.members:
-            sounds.append(member.play())
+            sounds.append(member.play(song))
         return " ".join(sounds)
-
-    def tune_instruments(self):
-        for member in self.members:
-            member.tune()
 
 # Create band members
 guitarist = Guitar()
@@ -59,14 +61,12 @@ vocalist = Vocals()
 band_name = "The Melodic Mayhem"
 band_members = [guitarist, drummer, pianist, bassist, vocalist]
 music_type = "Rock"
+songs = ["Song 1", "Song 2", "Song 3"]
 
-my_band = Band(band_name, band_members, music_type)
+my_band = Band(band_name, band_members, music_type, songs)
 
-# Simulate a performance before tuning
-print(my_band.perform())
+# Simulate a performance of Song 1
+print(my_band.perform("Song 1"))
 
-# Tune the instruments
-my_band.tune_instruments()
-
-# Simulate a performance after tuning
-print(my_band.perform())
+# Simulate a performance of Song 2
+print(my_band.perform("Song 2"))
