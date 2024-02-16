@@ -1,35 +1,38 @@
-def transcribe_dna(dna_sequence):
-    """
-    Transcribes a DNA sequence into an mRNA sequence.
-
-    Args:
-        dna_sequence (str): The DNA sequence to transcribe.
-
-    Returns:
-        str: The corresponding mRNA sequence.
-    """
-    # Define the transcription rules
-    transcription_rules = {
+def transcribe_dna(dna_sequences):
+    # Define the translation table
+    translation_table = {
         'A': 'U',
         'T': 'A',
         'G': 'C',
         'C': 'G'
     }
 
-    # Initialize the mRNA sequence
-    mrna_sequence = ''
+    # Initialize the output list
+    mrna_sequences = []
 
-    # Iterate through the DNA sequence
-    for base in dna_sequence:
-        # Apply the transcription rules
-        try:
-            mrna_sequence += transcription_rules[base]
-        except KeyError:
-            # Handle unknown base exceptions
-            raise ValueError(f"Unknown base {base} in DNA sequence")
+    # Iterate through the DNA sequences
+    for dna_sequence in dna_sequences:
+        # Initialize the mRNA sequence
+        mrna_sequence = ''
 
-    return mrna_sequence
+        # Iterate through the DNA sequence
+        for base in dna_sequence:
+            # Check if the base is in the translation table
+            if base in translation_table:
+                # Replace the base with its corresponding mRNA base
+                mrna_sequence += translation_table[base]
+            # If the base is not in the translation table (e.g. N for unknown), leave it unchanged
+            else:
+                mrna_sequence += base
 
-dna_sequence = 'ATGCGCTAGCT'
-mrna_sequence = transcribe_dna(dna_sequence)
-print(mrna_sequence)  # Output: UUGCCGAUCGU
+        # Add the mRNA sequence to the output list
+        mrna_sequences.append(mrna_sequence)
+
+    # Write the mRNA sequences to a text file
+    with open('mrna_output.txt', 'w') as f:
+        for mrna_sequence in mrna_sequences:
+            f.write(mrna_sequence + '\n')
+
+# Test the function
+dna_sequences = ['ATGCGCTAGCT', 'CGTGCAGCTAG', 'GATCGAGCTCG']
+transcribe_dna(dna_sequences)

@@ -1,3 +1,5 @@
+import datetime
+
 def transcribe_dna(dna_sequences):
     # Define the translation table
     translation_table = {
@@ -7,7 +9,7 @@ def transcribe_dna(dna_sequences):
         'C': 'G'
     }
 
-    # Initialize the mRNA sequences
+    # Initialize the output list
     mrna_sequences = []
 
     # Iterate through the DNA sequences
@@ -25,14 +27,21 @@ def transcribe_dna(dna_sequences):
             else:
                 mrna_sequence += base
 
-        # Add the mRNA sequence to the list
+        # Add the mRNA sequence to the output list
         mrna_sequences.append(mrna_sequence)
 
-    # Write the mRNA sequences to a file
-    with open('mRNA_output.txt', 'w') as f:
+    # Get the current date and time
+    now = datetime.datetime.now()
+
+    # Open the file in append mode
+    with open('mrna_output.txt', 'a') as f:
+        # Write the date and time
+        f.write(f"{now.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+
+        # Write each mRNA sequence with an empty line between each
         for mrna_sequence in mrna_sequences:
-            f.write(mrna_sequence + '\n')
+            f.write(mrna_sequence + '\n\n')
 
 # Test the function
-dna_sequences = ['ATGCGCTAGCT', 'GCTAGCAGCTA', 'TGCAGCTAGCA']
+dna_sequences = ['ATGCGCTAGCT', 'CGTGCAGCTAG', 'GATCGAGCTCG']
 transcribe_dna(dna_sequences)
