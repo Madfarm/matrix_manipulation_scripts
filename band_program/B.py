@@ -7,12 +7,16 @@ class Instrument:
         if not self.tuned:
             print("Instrument out of tune!")
         else:
+            # Each instrument makes a different sound based on the song
             if song == "Song 1":
-                return self.sound + " (Song 1 version)"
+                self.sound += " tweedle"
             elif song == "Song 2":
-                return self.sound + " (Song 2 version)"
+                self.sound += " twang"
+            elif song == "Song 3":
+                self.sound += " thump"
             else:
-                return self.sound
+                self.sound += " oops"
+            return self.sound
 
     def tune(self):
         self.tuned = True
@@ -45,10 +49,19 @@ class Band:
         self.songs = songs
 
     def perform(self, song):
+        # Check if instruments are in tune before playing
+        if not all(member.tuned for member in self.members):
+            print("Some instruments are out of tune! Please tune them first.")
+            return
+
         sounds = []
         for member in self.members:
             sounds.append(member.play(song))
         return " ".join(sounds)
+
+    def tune_instruments(self):
+        for member in self.members:
+            member.tune()
 
 # Create band members
 guitarist = Guitar()
@@ -65,8 +78,11 @@ songs = ["Song 1", "Song 2", "Song 3"]
 
 my_band = Band(band_name, band_members, music_type, songs)
 
-# Simulate a performance of Song 1
+# Simulate a performance with out-of-tune instruments
 print(my_band.perform("Song 1"))
 
-# Simulate a performance of Song 2
+# Tune the instruments
+my_band.tune_instruments()
+
+# Simulate a performance with in-tune instruments
 print(my_band.perform("Song 2"))

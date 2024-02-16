@@ -49,6 +49,8 @@ class Band:
         self.songs = songs
 
     def perform(self, song):
+        if not all(member.tuned for member in self.members):
+            self.tune_instruments()
         sounds = []
         for member in self.members:
             sounds.append(member.play(song))
@@ -58,6 +60,7 @@ class Band:
         for member in self.members:
             member.tune()
 
+            
 # Create band members
 guitarist = Guitar()
 drummer = Drums()
@@ -73,11 +76,11 @@ songs = ["Song 1", "Song 2", "Song 3"]
 
 my_band = Band(band_name, band_members, music_type, songs)
 
-my_band.tune_instruments()
 # Simulate a performance with out-of-tune instruments
 print(my_band.perform("Song 1"))
 
 # Tune the instruments
+my_band.tune_instruments()
 
 # Simulate a performance with in-tune instruments
 print(my_band.perform("Song 2"))
