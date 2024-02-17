@@ -1,60 +1,71 @@
-import heapq
-
 class Pastry:
-    def __init__(self, name, ingredients, baking_time, id_num):
+    def __init__(self, name, ingredients, baking_time, id):
         self.name = name
         self.ingredients = ingredients
         self.baking_time = baking_time
-        self.id_num = id_num
+        self.id = id
 
-class Oven:
-    def __init__(self, max_ingredients):
-        self.max_ingredients = max_ingredients
-        self.ingredient_supplies = {}
-        self.pastries_queue = []
+
+
+
+class Kitchen:
+    def __init__(self, ingredients_supply):
+        self.ingredients_supply = ingredients_supply
+        self.oven_time = 0
+
+    def allocate_ingredients(self, pastry):
+        for ingredient in pastry.ingredients:
+            if self.ingredients_supply[ingredient] < 1:
+                return False
+            self.ingredients_supply[ingredient] -= 1
+        return True
+
+    def allocate_oven_time(self, pastry):
+        if self.oven_time + pastry.baking_time > 100:  # assume 100 is the maximum oven time
+            return False
+        self.oven_time += pastry.baking_time
+        return True
+    
+
+class Bakery:
+    def __init__(self, kitchen, pastries):
+        self.kitchen = kitchen
+        self.pastries = pastries
+        self.queue = []
 
     def add_pastry(self, pastry):
-        self.pastries_queue.append(pastry)
-        for ingredient in pastry.ingredients:
-            if ingredient not in self.ingredient_supplies:
-                self.ingredient_supplies[ingredient] = 0
-            self.ingredient_supplies[ingredient] -= 1
+        if self.kitchen.allocate_ingredients(pastry) and self.kitchen.allocate_oven_time(pastry):
+            self.queue.append(pastry)
 
     def bake_next(self):
-        # Prioritize pastry with fewest unique ingredients
-        pastry = min(self.pastries_queue, key=lambda p: len(p.ingredients))
-
-        # Check if ingredient supplies are sufficient
-        if any(self.ingredient_supplies[ingredient] < 0 for ingredient in pastry.ingredients):
+        if not self.queue:
             return None
 
-        # Bake the pastry and update ingredient supplies
-        self.ingredient_supplies[pastry.ingredients[0]] += 1  # assume first ingredient is the most limited
+        # prioritize by fewest unique ingredients
+        pastry = min(self.queue, key=lambda x: len(x.ingredients))
+
+        # if two pastries require the same baking time, prioritize the one with the shortest baking time
+        if len(self.queue) > 1 and pastry.baking_time == self.queue[1].baking_time:
+            pastry = min(self.queue, key=lambda x: x.baking_time)
+
+        self.queue.remove(pastry)
         return pastry
 
-def main():
-    # Initialize oven with limited supplies
-    oven = Oven(max_ingredients=5)
-    oven.ingredient_supplies = {'flour': 5, 'sugar': 10, 'butter': 8, 'eggs': 4, 'chocolate': 3}
 
-    # Define pastries with multiple ingredients
-    pastries = [
-        Pastry(' Croissant', ['flour', 'butter', 'eggs'], 20, 1),
-        Pastry(' Mille-Feuille', ['pastry_dough', 'pastry_cream', 'chocolate'], 30, 2),
-        Pastry(' Éclairs', ['pastry_dough', 'cream', 'chocolate'], 25, 3),
-        Pastry(' Macarons', ['ground_almonds', 'sugar', 'egg_whites'], 15, 4),
-        Pastry(' Brownies', ['chocolate', 'sugar', 'eggs'], 25, 5),
-    ]
+pastries = [
+    Pastry("Croissant", ["butter", "flour", "yeast"], 20, 1),
+    Pastry("Tart", ["eggs", "sugar", "pastry_dough"], 30, 2),
+    Pastry("Cake", ["flour", "sugar", "eggs"], 40, 3),
+    Pastry("Cookie", ["butter", "sugar", "eggs"], 10, 4),
+]
 
-    # Add pastries to oven's queue
-    for pastry in pastries:
-        oven.add_pastry(pastry)
+kitchen = Kitchen({"butter": 5, "flour": 10, "yeast": 3, "eggs": 4, "sugar": 6, "pastry_dough": 2})
+bakery = Bakery(kitchen, pastries)
+for pastry in pastries:
+    bakery.add_pastry(pastry)
 
-    # Bake pastries one by one
-    while oven.pastries_queue:
-        pastry = oven.bake_next()
-        if pastry:
-            print(f"Baked {pastry.name} with id {pastry.id_num} using {', '.join(pastry.ingredients)}")
-
-if __name__ == "__main__":
-    main()
+while True:
+    pastry = bakery.bake_next()
+    if pastry is None:
+        break
+    print(f"Baking {pastry.name} with ID {pastry.id}")

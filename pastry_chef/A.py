@@ -61,10 +61,11 @@ pastries = [
 
 kitchen = Kitchen({"butter": 5, "flour": 10, "yeast": 3, "eggs": 4, "sugar": 6, "pastry_dough": 2})
 bakery = Bakery(kitchen, pastries)
+for pastry in pastries:
+    bakery.add_pastry(pastry)
 
 while True:
     pastry = bakery.bake_next()
-    print(f"Baking {pastry.name} with ID {pastry.id}")
     if pastry is None:
         break
-
+    print(f"Baking {pastry.name} with ID {pastry.id}")
