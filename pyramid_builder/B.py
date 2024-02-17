@@ -6,7 +6,7 @@ def pyramid_builder(total_blocks, num_builders, block_ratio, time_per_block):
     # Calculate the number of layers
     layers = int(math.log(total_blocks / base_blocks, 1 / block_ratio))
     # Calculate the number of blocks in each layer
-    layer_blocks = [base_blocks * (block_ratio ** i) for i in range(layers)]
+    layer_blocks = [base_blocks * (1 - block_ratio) ** i for i in range(layers)]
     # Calculate the total time required to build each layer
     layer_times = [time_per_block * num_builders * layer_blocks[i] for i in range(layers)]
     # Calculate the total time required to build the pyramid
