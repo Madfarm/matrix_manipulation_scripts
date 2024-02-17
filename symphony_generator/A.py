@@ -27,8 +27,10 @@ def generate_time_signature():
     num_beats = random.randint(2, 5)
     # Select a random note value (whole, half, quarter, etc.)
     note_value = random.choice(["w", "h", "q", "e", "s"])
+    # Convert note value to number
+    num_note_value = {"w": 4, "h": 2, "q": 1, "e": 0.5, "s": 0.25}[note_value]
     # Generate the time signature
-    time_signature = f"{num_beats}/{note_value}"
+    time_signature = f"{num_beats}/{num_note_value}"
     return time_signature
 
 # Define a function to generate a random tempo
@@ -60,10 +62,21 @@ def generate_melody(key_signature, time_signature):
         melody.append(note)
     return melody
 
+# Define a function to generate a symphony code
+def generate_symphony_code():
+    # Generate four groups of 4 characters separated by hyphens
+    code = []
+    for i in range(4):
+        group = []
+        for j in range(4):
+            group.append(random.choice(["A", "B", "C", "D", "E", "F", "G"]))
+        code.append("-".join(group))
+    return "".join(code)
+
 # Define a function to generate a symphony
 def generate_symphony():
-    # Generate a unique symphony code
-    symphony_code = "".join([random.choice(["A", "B", "C", "D", "E", "F", "G"]) for _ in range(3)])
+    # Generate a symphony code
+    symphony_code = generate_symphony_code()
     # Generate four movements
     movements = []
     for i in range(4):
