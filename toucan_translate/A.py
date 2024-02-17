@@ -1,12 +1,11 @@
 def toucan_transcribe(text):
     # Define the toucan sounds for consonants and vowels as lists
-    consonant_map = ["squawk"] * 26
-    vowel_map = ["trill"] * 5
+    consonant_map = ['p', 't', 'k', 'b', 'd', 'g', 'f', 'h', 'j', 'l', 'm', 'n', 'r', 's', 'v', 'w', 'x', 'y', 'z']
+    vowel_map = ['a', 'e', 'i', 'o', 'u']
 
     # Define a function to replace consonants and vowels
     def replace_sound(char):
-        if char.islower():
-            char = char.upper()
+        char = char.casefold()  # Convert to case-insensitive form
         if char in consonant_map:
             return "squawk"
         elif char in vowel_map:
