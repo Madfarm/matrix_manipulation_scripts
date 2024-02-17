@@ -4,67 +4,75 @@ import math
 class Bird:
     def __init__(self, species, start_location, destination, speed, preferred_weather):
         self.species = species
-        self.start_location = start_location
-        self.destination = destination
-        self.speed = speed
-        self.preferred_weather = preferred_weather
+        self.start_location = start_location  # tuple (lat, lon)
+        self.destination = destination  # tuple (lat, lon)
+        self.speed = speed  # meters per second
+        self.preferred_weather = preferred_weather  # list of weather conditions (e.g. ["sunny", "windy"])
         self.current_location = start_location
-        self.pitstops = []
+        self.pitstops = []  # list of tuples (lat, lon, distance_traveled)
+        self.distance_tolerance = 100  # meters, birds will switch directions if within this distance
 
-    def __repr__(self):
-        return f"{self.species} migrating from {self.start_location} to {self.destination}"
+    def __str__(self):
+        return f"{self.species} migrating from {self.start_location} to {self.destination} at {self.speed} m/s"
 
-def simulate_migration(bird, num_days, weather_data):
+def simulate_migration(birds, num_days, weather_data):
+    """
+    Simulate the migration journey of multiple birds over num_days days.
+    birds is a list of Bird objects
+    weather_data is a list of daily weather conditions (each a string)
+    """
     for day in range(num_days):
-        # Calculate distance to travel based on speed and weather conditions
-        distance = bird.speed * (weather_data[day]["wind_speed"] + 1)
-        direction = math.radians(weather_data[day]["wind_direction"])
-        x, y = bird.current_location
-        dx, dy = math.cos(direction), math.sin(direction)
-        new_x, new_y = x + distance * dx, y + distance * dy
-        bird.current_location = (new_x, new_y)
+        # Get the current weather condition
+        weather = weather_data[day]
 
-        # Check for pitstops based on geographic features and weather conditions
-        if weather_data[day]["precipitation"] > 0.5:
-            # Avoid flying in heavy rain, take a pitstop
-            bird.pitstops.append((new_x, new_y))
-            bird.current_location = bird.pitstops[-1]
-        elif geographic_features(new_x, new_y) == "mountain":
-            # Avoid flying over mountains, take a pitstop
-            bird.pitstops.append((new_x, new_y))
-            bird.current_location = bird.pitstops[-1]
+        # Check if each bird wants to migrate today based on the weather
+        for bird in birds:
+            if weather in bird.preferred_weather:
+                # Calculate the distance to travel today
+                distance = bird.speed * 86400  # convert speed from m/s to km/day
 
-        # Update bird's magnetic field and sun position
-        bird.update_magnetic_field(new_x, new_y)
-        bird.update_sun_position(day)
+                # Get the direction to travel (towards destination)
+                direction = math.radians(bird.destination[0] - bird.current_location[0])
 
-        # Check if reached destination
-        if bird.current_location == bird.destination:
-            print(f"{bird} reached destination after {day+1} days")
-            return
+                # Simulate traveling and check for pitstops and other birds
+                while distance > 0:
+                    # Check if there is another bird within the distance tolerance
+                    for other_bird in birds:
+                        if other_bird != bird and math.hypot(other_bird.current_location[0] - bird.current_location[0],
+                                                             other_bird.current_location[1] - bird.current_location[1]) < bird.distance_tolerance:
+                            # Switch directions for both birds
+                            bird.direction = math.radians(other_bird.destination[0] - bird.current_location[0])
+                            other_bird.direction = math.radians(bird.destination[0] - other_bird.current_location[0])
+                            break
 
-def geographic_features(x, y):
-    # Simulate a simple geographic feature map
-    features = {
-        (0, 0): "ocean",
-        (0, 100): "mountain",
-        (100, 0): "desert",
-        (100, 100): "forest"
-    }
-    return features.get((x, y), "unknown")
+                    # Check if there is a geographic feature (e.g. mountain, river) within the bird's range
+                    # If so, make a pitstop and adjust the distance accordingly
+                    # (Note: this is a simplified implementation, you could use more sophisticated algorithms to determine pitstops)
+                    if random.random() < 0.1:  # 10% chance of encountering a geographic feature
+                        distance -= 100  # make a pitstop and reduce distance traveled
+                        bird.pitstops.append((bird.current_location[0], bird.current_location[1], distance))
 
-def generate_weather_data(num_days):
-    # Simulate a simple weather data generator
-    weather = []
-    for day in range(num_days):
-        weather.append({
-            "wind_speed": random.uniform(0, 10),
-            "wind_direction": random.uniform(0, 360),
-            "precipitation": random.uniform(0, 1)
-        })
-    return weather
+                    # Update the bird's location
+                    bird.current_location = (bird.current_location[0] + distance * math.cos(direction),
+                                             bird.current_location[1] + distance * math.sin(direction))
+                    distance -= distance  # reduce distance traveled to 0
 
-# Example usage
-bird = Bird("Robin", (0, 0), (100, 100), 50, ["sunny", "light_wind"])
-weather_data = generate_weather_data(30)
-simulate_migration(bird, 30, weather_data)
+        # Update the pitstops for each bird
+        for bird in birds:
+            bird.pitstops.append((bird.current_location[0], bird.current_location[1], 0))
+
+    return birds
+
+# Example usage:
+weather_data = ["sunny", "cloudy", "rain", "windy", "sunny", "cloudy"]
+birds = [
+    Bird("Robin", (40.0, -100.0), (30.0, -80.0), 10, ["sunny", "windy"]),
+    Bird("Sparrow", (35.0, -105.0), (25.0, -75.0), 5, ["cloudy", "rain"]),
+    Bird("Finch", (45.0, -90.0), (35.0, -60.0), 15, ["sunny", "windy"])
+]
+simulated_birds = simulate_migration(birds, 6, weather_data)
+
+for bird in simulated_birds:
+    print(bird)
+    print(bird.pitstops)
+    print()
