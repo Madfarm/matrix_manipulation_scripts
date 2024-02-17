@@ -2,4 +2,22 @@
     {
         "song_id": "12345",
         "artist": "Example Artist",
-        "duration": 
+        "duration": "240.0",
+        "release_year": 2022,
+        "rating": 4
+    },
+    {
+        "song_id": "67890",
+        "artist": "Another Artist",
+        "duration": "180.0",
+        "release_year": 2021,
+        "rating": 3
+    },
+    {
+        "song_id": "54321",
+        "artist": "Yet Another Artist",
+        "duration": "320.0",
+        "release_year": 2023,
+        "rating": 5
+    }
+]

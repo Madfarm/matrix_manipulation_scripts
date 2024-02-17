@@ -52,7 +52,10 @@ def load_songs_from_file(filename):
 def save_playlist_to_file(playlist, filename):
     data = []
     for song in playlist.songs:
-        data.append({**song.__dict__, 'rating': song.rating})
+        song_data = song.__dict__.copy()
+        song_data['duration'] = str(song.duration)
+        data.append(song_data)
+
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
 
