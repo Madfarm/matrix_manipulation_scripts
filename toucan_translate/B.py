@@ -7,26 +7,26 @@ def toucan_transcribe(text):
         "b": "squawk",
         "d": "squawk",
         "g": "squawk",
-        "f": "fquawk",
-        "h": "hquawk",
-        "j": "jquawk",
-        "l": "lquawk",
-        "m": "mquawk",
-        "n": "nquawk",
-        "r": "rquawk",
+        "f": "squawk",
+        "h": "squawk",
+        "j": "squawk",
+        "l": "squawk",
+        "m": "squawk",
+        "n": "squawk",
+        "r": "squawk",
         "s": "squawk",
-        "v": "vquawk",
-        "w": "wquawk",
-        "x": "xquawk",
-        "y": "yquawk",
-        "z": "zquawk"
+        "v": "squawk",
+        "w": "squawk",
+        "x": "squawk",
+        "y": "squawk",
+        "z": "squawk"
     }
     vowel_map = {"a": "trill", "e": "trill", "i": "trill", "o": "trill", "u": "trill"}
 
     # Define a function to replace consonants and vowels
     def replace_sound(char):
         if char in consonant_map:
-            return consonant_map[char]
+            return "squawk"  # Every consonant gets replaced with just "squawk"
         elif char in vowel_map:
             return vowel_map[char]
         else:
