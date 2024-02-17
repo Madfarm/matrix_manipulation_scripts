@@ -1,10 +1,11 @@
 class Animal:
-    def __init__(self, name, age, gender, health_status, id):
+    def __init__(self, name, age, gender, health_status, unique_id, predator=False):
         self.name = name
         self.age = age
         self.gender = gender
         self.health_status = health_status
-        self.id = id
+        self.unique_id = unique_id
+        self.predator = predator
 
     def get_name(self):
         return self.name
@@ -18,73 +19,71 @@ class Animal:
     def get_health_status(self):
         return self.health_status
 
-    def get_id(self):
-        return self.id
+    def get_unique_id(self):
+        return self.unique_id
+
+    def feed(self):
+        print(f"Feeding {self.name}")
+
+    def health_check(self):
+        print(f"Checking health of {self.name}")
 
 class Lion(Animal):
-    def __init__(self, name, age, gender, health_status, id):
-        super().__init__(name, age, gender, health_status, id)
-
-class Zebra(Animal):
-    def __init__(self, name, age, gender, health_status, id):
-        super().__init__(name, age, gender, health_status, id)
-
-class Giraffe(Animal):
-    def __init__(self, name, age, gender, health_status, id):
-        super().__init__(name, age, gender, health_status, id)
-
-class Penguin(Animal):
-    def __init__(self, name, age, gender, health_status, id):
-        super().__init__(name, age, gender, health_status, id)
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=True)
 
 class Snake(Animal):
-    def __init__(self, name, age, gender, health_status, id):
-        super().__init__(name, age, gender, health_status, id)
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=True)
 
-def is_compatible(animal1, animal2):
-    # predators and preys should not be in the same enclosure
-    if animal1.get_id() in [Lion.id, Snake.id] and animal2.get_id() in [Zebra.id, Giraffe.id, Penguin.id]:
-        return False
-    elif animal2.get_id() in [Lion.id, Snake.id] and animal1.get_id() in [Zebra.id, Giraffe.id, Penguin.id]:
-        return False
-    else:
-        return True
+class Zebra(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
 
-def daily_feeding(animals):
-    for animal in animals:
-        print(f"Feeding {animal.get_name()}")
+class Giraffe(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
 
-def health_check_up(animals):
-    for animal in animals:
-        print(f"Checking health of {animal.get_name()}")
-
-def visiting_hours(animals):
-    for animal in animals:
-        print(f"Visiting {animal.get_name()}")
+class Penguin(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
 
 def create_enclosure(animals):
-    enclosure = []
     for animal in animals:
-        if not is_compatible(animal, enclosure):
-            raise ValueError("Incompatible animals")
-        enclosure.append(animal)
-    return enclosure
+        if animal.predator and any(other.predator for other in animals if other != animal):
+            # Predators should not be in the same enclosure as other predators
+            return False
+    return True
 
-# create some animals
-lion1 = Lion("Simba", 3, "male", "healthy", 1)
-zebra1 = Zebra("Stripes", 5, "female", "healthy", 2)
-giraffe1 = Giraffe("Gerald", 7, "male", "healthy", 3)
-penguin1 = Penguin("Percy", 2, "male", "healthy", 4)
-snake1 = Snake("Slinky", 4, "male", "healthy", 5)
+def daily_routine():
+    animals = [
+        Lion("Simba", 5, "Male", "Healthy", 1),
+        Zebra("Stripes", 3, "Female", "Healthy", 2),
+        Giraffe("Giggy", 7, "Male", "Healthy", 3),
+        Penguin("Percy", 4, "Male", "Healthy", 4),
+        Snake("Slinky", 6, "Female", "Healthy", 5)
+    ]
 
-# create an enclosure
-enclosure = create_enclosure([lion1, zebra1, giraffe1, penguin1])
+    # Create enclosures
+    enclosures = []
+    for i in range(3):
+        enclosures.append([])
 
-# daily feeding
-daily_feeding(enclosure)
+    # Assign animals to enclosures
+    for animal in animals:
+        found_enclosure = False
+        for enclosure in enclosures:
+            if create_enclosure(enclosure + [animal]):
+                enclosure.append(animal)
+                found_enclosure = True
+                break
+        if not found_enclosure:
+            print(f"Error: Could not find suitable enclosure for {animal.get_name()}")
 
-# health check-up
-health_check_up(enclosure)
+    # Perform daily routine
+    for enclosure in enclosures:
+        for animal in enclosure:
+            animal.feed()
+            animal.health_check()
 
-# visiting hours
-visiting_hours(enclosure)
+daily_routine()

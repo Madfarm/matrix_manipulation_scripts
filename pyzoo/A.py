@@ -1,10 +1,11 @@
 class Animal:
-    def __init__(self, name, age, gender, health_status, unique_id):
+    def __init__(self, name, age, gender, health_status, unique_id, predator=False):
         self.name = name
         self.age = age
         self.gender = gender
         self.health_status = health_status
         self.unique_id = unique_id
+        self.predator = predator
 
     def get_name(self):
         return self.name
@@ -29,29 +30,28 @@ class Animal:
 
 class Lion(Animal):
     def __init__(self, name, age, gender, health_status, unique_id):
-        super().__init__(name, age, gender, health_status, unique_id)
-
-class Zebra(Animal):
-    def __init__(self, name, age, gender, health_status, unique_id):
-        super().__init__(name, age, gender, health_status, unique_id)
-
-class Giraffe(Animal):
-    def __init__(self, name, age, gender, health_status, unique_id):
-        super().__init__(name, age, gender, health_status, unique_id)
-
-class Penguin(Animal):
-    def __init__(self, name, age, gender, health_status, unique_id):
-        super().__init__(name, age, gender, health_status, unique_id)
+        super().__init__(name, age, gender, health_status, unique_id, predator=True)
 
 class Snake(Animal):
     def __init__(self, name, age, gender, health_status, unique_id):
-        super().__init__(name, age, gender, health_status, unique_id)
+        super().__init__(name, age, gender, health_status, unique_id, predator=True)
+
+class Zebra(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
+
+class Giraffe(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
+
+class Penguin(Animal):
+    def __init__(self, name, age, gender, health_status, unique_id):
+        super().__init__(name, age, gender, health_status, unique_id, predator=False)
 
 def create_enclosure(animals):
-    # Check if the animals can coexist in the same enclosure
     for animal in animals:
-        if animal.get_name() == "Lion" or animal.get_name() == "Snake":
-            # Predators should not be in the same enclosure as other animals
+        if animal.predator and any(other.predator for other in animals if other != animal):
+            # Predators should not be in the same enclosure as other predators
             return False
     return True
 
