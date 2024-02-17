@@ -34,21 +34,28 @@ class Bakery:
         self.queue = []
 
     def add_pastry(self, pastry):
-        if self.kitchen.allocate_ingredients(pastry) and self.kitchen.allocate_oven_time(pastry):
-            self.queue.append(pastry)
+        if not self.kitchen.allocate_ingredients(pastry):
+            print(f"Error: Not enough ingredients to bake {pastry.name}")
+            return
+        if not self.kitchen.allocate_oven_time(pastry):
+            print(f"Error: Not enough oven time to bake {pastry.name}")
+            return
+        self.queue.append(pastry)
 
     def bake_next(self):
         if not self.queue:
             return None
 
-        # prioritize by fewest unique ingredients
-        pastry = min(self.queue, key=lambda x: len(x.ingredients))
+        pastry = self.queue[0]
+        print(pastry)
+        if not self.kitchen.allocate_ingredients(pastry):
+            print(f"Error: Ran out of ingredients for {pastry.name}")
+            return None
+        if not self.kitchen.allocate_oven_time(pastry):
+            print(f"Error: Ran out of oven time for {pastry.name}")
+            return None
 
-        # if two pastries require the same baking time, prioritize the one with the shortest baking time
-        if len(self.queue) > 1 and pastry.baking_time == self.queue[1].baking_time:
-            pastry = min(self.queue, key=lambda x: x.baking_time)
-
-        self.queue.remove(pastry)
+        self.queue.pop(0)
         return pastry
 
 
@@ -61,8 +68,10 @@ pastries = [
 
 kitchen = Kitchen({"butter": 5, "flour": 10, "yeast": 3, "eggs": 4, "sugar": 6, "pastry_dough": 2})
 bakery = Bakery(kitchen, pastries)
+
 for pastry in pastries:
     bakery.add_pastry(pastry)
+    # print(bakery.queue)
 
 while True:
     pastry = bakery.bake_next()

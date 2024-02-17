@@ -34,8 +34,13 @@ class Bakery:
         self.queue = []
 
     def add_pastry(self, pastry):
-        if self.kitchen.allocate_ingredients(pastry) and self.kitchen.allocate_oven_time(pastry):
-            self.queue.append(pastry)
+        if not self.kitchen.allocate_ingredients(pastry):
+            print(f"Error: Not enough ingredients to bake {pastry.name}!")
+            return
+        if not self.kitchen.allocate_oven_time(pastry):
+            print(f"Error: Not enough oven time to bake {pastry.name}!")
+            return
+        self.queue.append(pastry)
 
     def bake_next(self):
         if not self.queue:
@@ -56,11 +61,11 @@ pastries = [
     Pastry("Croissant", ["butter", "flour", "yeast"], 20, 1),
     Pastry("Tart", ["eggs", "sugar", "pastry_dough"], 30, 2),
     Pastry("Cake", ["flour", "sugar", "eggs"], 40, 3),
-    Pastry("Cookie", ["butter", "sugar", "eggs"], 10, 4),
 ]
 
 kitchen = Kitchen({"butter": 5, "flour": 10, "yeast": 3, "eggs": 4, "sugar": 6, "pastry_dough": 2})
 bakery = Bakery(kitchen, pastries)
+
 for pastry in pastries:
     bakery.add_pastry(pastry)
 
