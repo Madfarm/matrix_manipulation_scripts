@@ -5,7 +5,7 @@ class Song:
     def __init__(self, song_id, artist, duration, release_year):
         self.song_id = song_id
         self.artist = artist
-        self.duration = datetime.timedelta(seconds=duration)
+        self.duration = duration
         self.release_year = release_year
 
     def __str__(self):
@@ -22,11 +22,14 @@ class Playlist:
         self.name = name
         self.songs = []
 
-    def __str__(self):
-        return f"Playlist: {self.name}"
+    def __repr__(self):
+        return f"Playlist({self.name}, {len(self.songs)} songs)"
 
     def add_song(self, song):
         song.add_to_playlist(self)
+
+    def append(self, song):
+        self.songs.append(song)
 
     def calculate_duration(self):
         total_duration = datetime.timedelta()
@@ -34,14 +37,17 @@ class Playlist:
             total_duration += song.duration
         return total_duration
 
+
 def load_songs_from_file(filename):
     with open(filename, 'r') as f:
         data = json.load(f)
         songs = []
         for song_data in data:
             song = Song(**song_data)
+            song.duration = datetime.timedelta(seconds=song.duration)
             songs.append(song)
-        return songs
+
+    return songs
 
 def save_playlist_to_file(playlist, filename):
     data = []
