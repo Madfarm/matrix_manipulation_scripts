@@ -1,5 +1,6 @@
 import random
 import math
+import json
 
 class Bird:
     def __init__(self, species, start_location, destination, speed, preferred_weather):
@@ -70,9 +71,10 @@ birds = [
     Bird("Sparrow", (35.0, -105.0), (25.0, -75.0), 5, ["cloudy", "rain"]),
     Bird("Finch", (45.0, -90.0), (35.0, -60.0), 15, ["sunny", "windy"])
 ]
+
+# Simulate the migration
 simulated_birds = simulate_migration(birds, 6, weather_data)
 
-for bird in simulated_birds:
-    print(bird)
-    print(bird.pitstops)
-    print()
+# Output the results to a JSON file
+with open("migration_results.json", "w") as f:
+    json.dump(simulated_birds, f)

@@ -1,3 +1,4 @@
+import json
 import random
 import math
 
@@ -21,6 +22,7 @@ def simulate_migration(birds, num_days, weather_data):
     birds is a list of Bird objects
     weather_data is a list of daily weather conditions (each a string)
     """
+    simulation_results = []
     for day in range(num_days):
         # Get the current weather condition
         weather = weather_data[day]
@@ -57,11 +59,23 @@ def simulate_migration(birds, num_days, weather_data):
                                              bird.current_location[1] + distance * math.sin(direction))
                     distance -= distance  # reduce distance traveled to 0
 
-        # Update the pitstops for each bird
-        for bird in birds:
-            bird.pitstops.append((bird.current_location[0], bird.current_location[1], 0))
+                # Update the pitstops for each bird
+                bird.pitstops.append((bird.current_location[0], bird.current_location[1], 0))
 
-    return birds
+                # Add simulation result to the list
+                simulation_results.append({
+                    'species': bird.species,
+                    'start_location': bird.start_location,
+                    'destination': bird.destination,
+                    'speed': bird.speed,
+                    'preferred_weather': bird.preferred_weather,
+                    'pitstops': bird.pitstops,
+                    'current_location': bird.current_location
+                })
+
+    # Output the simulation results to a JSON file
+    with open('simulation_results.json', 'w') as f:
+        json.dump(simulation_results, f, indent=4)
 
 # Example usage:
 weather_data = ["sunny", "cloudy", "rain", "windy", "sunny", "cloudy"]
@@ -70,9 +84,4 @@ birds = [
     Bird("Sparrow", (35.0, -105.0), (25.0, -75.0), 5, ["cloudy", "rain"]),
     Bird("Finch", (45.0, -90.0), (35.0, -60.0), 15, ["sunny", "windy"])
 ]
-simulated_birds = simulate_migration(birds, 6, weather_data)
-
-for bird in simulated_birds:
-    print(bird)
-    print(bird.pitstops)
-    print()
+simulate_migration(birds, 6, weather_data)
