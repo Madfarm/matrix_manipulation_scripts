@@ -23,38 +23,30 @@ def generate_key_signature():
 
 # Define a function to generate a random time signature
 def generate_time_signature():
-    # Select a random number of beats (2-5)
-    num_beats = random.randint(2, 5)
     # Select a random note value (whole, half, quarter, etc.)
     note_value = random.choice(["w", "h", "q", "e", "s"])
     # Convert note value to number
-    if note_value == "w":
-        num_note_value = 4
-    elif note_value == "h":
-        num_note_value = 2
-    elif note_value == "q":
-        num_note_value = 1
-    elif note_value == "e":
-        num_note_value = 0.5
-    elif note_value == "s":
-        num_note_value = 0.25
+    num_note_value = {"w": 1, "h": 2, "q": 4, "e": 8, "s": 16}[note_value]
+    # Select a random number of beats (2-5)
+    num_beats = random.randint(2, 5)
     # Generate the time signature
     time_signature = f"{num_beats}/{num_note_value}"
     return time_signature
 
 # Define a function to generate a random symphony code
 def generate_symphony_code():
-    # Generate 12 random characters in groups of 4 separated by hyphens
-    symphony_code = []
+    # Generate three groups of 4 characters separated by hyphens
+    code = []
     for i in range(3):
-        symphony_code.append("".join([random.choice(["A", "B", "C", "D", "E", "F", "G"]) for _ in range(4)]))
-        symphony_code.append("-")
-    symphony_code.pop(-1)  # Remove last hyphen
-    return "".join(symphony_code)
+        group = []
+        for j in range(4):
+            group.append(random.choice(["A", "B", "C", "D", "E", "F", "G"]))
+        code.append("".join(group))
+    return "-".join(code)
 
 # Define a function to generate a symphony
 def generate_symphony():
-    # Generate a unique symphony code
+    # Generate a symphony code
     symphony_code = generate_symphony_code()
     # Generate four movements
     movements = []

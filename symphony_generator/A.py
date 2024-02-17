@@ -23,50 +23,19 @@ def generate_key_signature():
 
 # Define a function to generate a random time signature
 def generate_time_signature():
-    # Select a random number of beats (2-5)
-    num_beats = random.randint(2, 5)
     # Select a random note value (whole, half, quarter, etc.)
     note_value = random.choice(["w", "h", "q", "e", "s"])
     # Convert note value to number
-    num_note_value = {"w": 4, "h": 2, "q": 1, "e": 0.5, "s": 0.25}[note_value]
+    num_note_value = {"w": 1, "h": 2, "q": 4, "e": 8, "s": 16}[note_value]
     # Generate the time signature
-    time_signature = f"{num_beats}/{num_note_value}"
+    time_signature = f"{num_note_value}/4"
     return time_signature
 
-# Define a function to generate a random tempo
-def generate_tempo():
-    # Select a random tempo range (slow, moderate, fast)
-    tempo_range = random.choice(["slow", "moderate", "fast"])
-    # Select a random tempo value within the range
-    tempo_value = random.uniform(30, 120)
-    # Generate the tempo marking
-    tempo_marking = {
-        "slow": f"Largo ({tempo_value})",
-        "moderate": f"Moderato ({tempo_value})",
-        "fast": f"Allegro ({tempo_value})"
-    }[tempo_range]
-    return tempo_marking
-
-# Define a function to generate a random melody
-def generate_melody(key_signature, time_signature):
-    # Define a scale for the key signature
-    scale = ["A", "B", "C", "D", "E", "F", "G"]
-    # Select a random starting note
-    starting_note = random.choice(scale)
-    # Generate the melody
-    melody = []
-    for i in range(16):  # 16 notes per melody
-        note = starting_note
-        while note == starting_note:
-            note = random.choice(scale)
-        melody.append(note)
-    return melody
-
-# Define a function to generate a symphony code
+# Define a function to generate a random symphony code
 def generate_symphony_code():
-    # Generate four groups of 4 characters separated by hyphens
+    # Generate three groups of 4 characters separated by hyphens
     code = []
-    for i in range(4):
+    for i in range(3):
         group = []
         for j in range(4):
             group.append(random.choice(["A", "B", "C", "D", "E", "F", "G"]))
