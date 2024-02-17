@@ -2,22 +2,43 @@
     {
         "song_id": "12345",
         "artist": "Example Artist",
-        "duration": "240.0",
+        "duration": 240,
         "release_year": 2022,
-        "rating": 4
+        "rating": 3
     },
     {
         "song_id": "67890",
         "artist": "Another Artist",
-        "duration": "180.0",
+        "duration": 180,
         "release_year": 2021,
-        "rating": 3
+        "rating": 2
     },
     {
         "song_id": "54321",
         "artist": "Yet Another Artist",
-        "duration": "320.0",
+        "duration": 320,
         "release_year": 2023,
+        "rating": 4
+    },
+    {
+        "song_id": "11111",
+        "artist": "New Artist",
+        "duration": 200,
+        "release_year": 2020,
         "rating": 5
+    },
+    {
+        "song_id": "22222",
+        "artist": "Different Artist",
+        "duration": 280,
+        "release_year": 2019,
+        "rating": 1
+    },
+    {
+        "song_id": "33333",
+        "artist": "Unique Artist",
+        "duration": 300,
+        "release_year": 2024,
+        "rating": 2
     }
 ]

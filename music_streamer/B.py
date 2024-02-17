@@ -1,4 +1,3 @@
-import datetime
 import json
 
 class Song:
@@ -7,36 +6,21 @@ class Song:
         self.artist = artist
         self.duration = duration
         self.release_year = release_year
+        self.rating = None
 
-    def __str__(self):
-        return f"{self.song_id}: {self.artist} - {self.duration} ({self.release_year})"
-
-    def rate(self, rating):
-        self.rating = rating
-
-    def add_to_playlist(self, playlist):
-        playlist.append(self)
+    def __repr__(self):
+        return f"Song({self.song_id}, {self.artist}, {self.duration}, {self.release_year})"
 
 class Playlist:
     def __init__(self, name):
         self.name = name
         self.songs = []
 
-    def __repr__(self):
-        return f"Playlist({self.name}, {len(self.songs)} songs)"
-
     def add_song(self, song):
-        song.add_to_playlist(self)
-
-    def append(self, song):
         self.songs.append(song)
 
-    def calculate_duration(self):
-        total_duration = datetime.timedelta()
-        for song in self.songs:
-            total_duration += song.duration
-        return total_duration
-
+    def __repr__(self):
+        return f"Playlist({self.name}, {len(self.songs)} songs)"
 
 def load_songs_from_file(filename):
     with open(filename, 'r') as f:
@@ -44,38 +28,39 @@ def load_songs_from_file(filename):
         songs = []
         for song_data in data:
             song = Song(**song_data)
-            song.duration = datetime.timedelta(seconds=song.duration)
             songs.append(song)
-
-    return songs
+        return songs
 
 def save_playlist_to_file(playlist, filename):
     data = []
     for song in playlist.songs:
-        song_data = {**song.__dict__, 'rating': song.rating}
-        song_data['duration'] = str(song.duration.total_seconds())
+        song_data = song.__dict__.copy()
+        song_data['rating'] = song.rating
         data.append(song_data)
-
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
 
+def get_rating(song):
+    print(f" Song ID: {song.song_id} | Artist: {song.artist}")
+    rating = input("Enter rating (1-5): ")
+    while rating not in ['1', '2', '3', '4', '5']:
+        rating = input("Invalid rating. Enter rating (1-5): ")
+    return int(rating)
+
 def main():
     # Load songs from file
-    songs = load_songs_from_file("/root/code-sandbox/randomJS/matrix_manipulation_scripts/music_streamer/songs.json")
+    songs = load_songs_from_file('/root/code-sandbox/randomJS/matrix_manipulation_scripts/music_streamer/songs.json')
 
     # Create a playlist
     playlist = Playlist('Favorites')
 
-    # Add songs to playlist and rate them
-    playlist.add_song(songs[0])
-    playlist.add_song(songs[1])
-    playlist.add_song(songs[2])
-    playlist.songs[0].rate(4)
-    playlist.songs[1].rate(3)
-    playlist.songs[2].rate(5)
+    # Add all songs to playlist
+    for song in songs:
+        playlist.add_song(song)
 
-    # Calculate total duration of playlist
-    print(f"Total duration: {playlist.calculate_duration()}")
+    # Get ratings for each song
+    for song in playlist.songs:
+        song.rating = get_rating(song)
 
     # Save playlist to file
     save_playlist_to_file(playlist, 'favorites.json')
