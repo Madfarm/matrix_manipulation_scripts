@@ -8,12 +8,12 @@ class Dinosaur:
     
     def grow(self, temperature, food_availability):
         # Simulate growth based on temperature and food availability
-        self.growth_rate = self.reproduction_rate * (temperature / 100) * (food_availability / 100)
+        self.growth_rate = self.reproduction_rate * (temperature / 100) ** 2 * (food_availability / 100) ** 3
         self.population += self.growth_rate
     
     def die_off(self, temperature, food_availability):
         # Simulate die-off based on temperature and food availability
-        die_off_rate = (1 - (temperature / 100)) * (1 - (food_availability / 100))
+        die_off_rate = (1 - (temperature / 100) ** 0.5) * (1 - (food_availability / 100) ** 0.7)
         self.population -= self.population * die_off_rate
     
     def update(self, temperature, food_availability):
