@@ -1,3 +1,5 @@
+import os
+
 class Dinosaur:
     def __init__(self, reproduction_rate, lifespan, initial_population):
         self.reproduction_rate = reproduction_rate
@@ -28,21 +30,51 @@ class Dinosaur:
         return self.population
 
 def main():
-    # User input
-    reproduction_rate = float(input("Enter reproduction rate: "))
-    lifespan = int(input("Enter lifespan: "))
-    initial_population = int(input("Enter initial population: "))
-    years = int(input("Enter number of years to predict: "))
-    temperature_changes = [float(input(f"Enter temperature change for year {i+1}: ")) for i in range(years)]
-    food_availability_changes = [float(input(f"Enter food availability change for year {i+1}: ")) for i in range(years)]
+    print("Welcome to the Dinosaur Population Predictor!")
+    print("Do you want to input values manually or use a text file? (type 'manual' or 'file')")
+    input_method = input()
 
-    # Create a Dinosaur object
-    dino = Dinosaur(reproduction_rate, lifespan, initial_population)
+    if input_method == 'manual':
+        # User input
+        reproduction_rate = float(input("Enter reproduction rate: "))
+        lifespan = int(input("Enter lifespan: "))
+        initial_population = int(input("Enter initial population: "))
+        years = int(input("Enter number of years to predict: "))
+        temperature_changes = [float(input(f"Enter temperature change for year {i+1}: ")) for i in range(years)]
+        food_availability_changes = [float(input(f"Enter food availability change for year {i+1}: ")) for i in range(years)]
 
-    # Predict population decline
-    predicted_population = dino.predict_population(years, temperature_changes, food_availability_changes)
+        # Create a Dinosaur object
+        dino = Dinosaur(reproduction_rate, lifespan, initial_population)
 
-    print(f"Predicted population after {years} years: {predicted_population}")
+        # Predict population decline
+        predicted_population = dino.predict_population(years, temperature_changes, food_availability_changes)
+
+        print(f"Predicted population after {years} years: {predicted_population}")
+
+    elif input_method == 'file':
+        # Read input from file
+        filename = input("Enter file name: ")
+        with open(filename, 'r') as f:
+            lines = f.readlines()
+
+        # Parse input from file
+        reproduction_rate = float(lines[0].strip())
+        lifespan = int(lines[1].strip())
+        initial_population = int(lines[2].strip())
+        years = int(lines[3].strip())
+        temperature_changes = [float(line.strip()) for line in lines[4:4+years]]
+        food_availability_changes = [float(line.strip()) for line in lines[4+years:]]
+
+        # Create a Dinosaur object
+        dino = Dinosaur(reproduction_rate, lifespan, initial_population)
+
+        # Predict population decline
+        predicted_population = dino.predict_population(years, temperature_changes, food_availability_changes)
+
+        print(f"Predicted population after {years} years: {predicted_population}")
+
+    else:
+        print("Invalid input. Please try again.")
 
 if __name__ == "__main__":
     main()
