@@ -1,10 +1,15 @@
-import random
+class Island:
+    def __init__(self, question, energy_cost, energy_gain):
+        self.question = question
+        self.energy_cost = energy_cost
+        self.energy_gain = energy_gain
 
 class Philosopher:
     def __init__(self, initial_energy, thoughts=[]):
         self.thoughts = thoughts
         self.knowledge = {}
         self.energy = initial_energy
+        self.islands = []  # list of islands to visit
 
     def visit_island(self, island):
         if self.energy < island.energy_cost:
@@ -17,35 +22,36 @@ class Philosopher:
         return True
 
     def can_reach_islands(self, islands):
-        return all(self.visit_island(island) for island in islands)
-    
-class Island:
-    def __init__(self, question, energy_cost, energy_gain):
-        self.question = question
-        self.energy_cost = energy_cost
-        self.energy_gain = energy_gain
+        for island in islands:
+            if not self.visit_island(island):
+                return False
+        return True
 
-    def __str__(self):
-        return f"{self.question} ({self.energy_cost} energy cost, {self.energy_gain} energy gain)"
+    def set_islands(self, islands):
+        self.islands = islands
 
+# Create islands
+island1 = Island("What is the meaning of life?", 5, 10)
+island2 = Island("Is free will an illusion?", 3, 5)
+island3 = Island("Can machines think?", 8, 12)
 
-island1 = Island("What is the meaning of life?", 5, 10)  # energy cost = 5, energy gain = 10
-island2 = Island("Is free will an illusion?", 3, 5)  # energy cost = 3, energy gain = 5
-island3 = Island("Can machines think?", 8, 12)  # energy cost = 8, energy gain = 12
+# Create philosopher
+philosopher = Philosopher(15)
 
-philosopher = Philosopher(15)  # initial energy = 15
+# Set islands to visit
+philosopher.set_islands([island1, island2, island3])
 
-print(philosopher.visit_island(island1))  # True
-print(philosopher.thoughts)  # ["What is the meaning of life?"]
-print(philosopher.energy)  # 20
+# Test can_reach_islands()
+print(philosopher.can_reach_islands())  # Should print True
 
-print(philosopher.visit_island(island2))  # True
-print(philosopher.thoughts)  # ["What is the meaning of life?", "Is free will an illusion?"]
-print(philosopher.energy)  # 22
+# Try to visit island3 (which requires 8 energy)
+philosopher.visit_island(island3)  # Should print False
 
-print(philosopher.visit_island(island3))  # False
-print(philosopher.thoughts)  # ["What is the meaning of life?", "Is free will an illusion?"]
-print(philosopher.energy)  # 22
+# Try to visit island1 (which requires 5 energy)
+philosopher.visit_island(island1)  # Should print True
 
-print(philosopher.can_reach_islands([island1, island2]))  # True
-print(philosopher.can_reach_islands([island1, island2, island3]))  # False
+# Try to visit island2 (which requires 3 energy)
+philosopher.visit_island(island2)  # Should print True
+
+# Test can_reach_islands() again
+print(philosopher.can_reach_islands())  # Should print False (because philosopher doesn't have enough energy to visit island3)
