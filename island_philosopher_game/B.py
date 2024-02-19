@@ -19,6 +19,15 @@ class Philosopher:
     def can_reach_islands(self, islands):
         return all(self.visit_island(island) for island in islands)
     
+class Island:
+    def __init__(self, question, energy_cost, energy_gain):
+        self.question = question
+        self.energy_cost = energy_cost
+        self.energy_gain = energy_gain
+
+    def __str__(self):
+        return f"{self.question} ({self.energy_cost} energy cost, {self.energy_gain} energy gain)"
+
 
 island1 = Island("What is the meaning of life?", 5, 10)  # energy cost = 5, energy gain = 10
 island2 = Island("Is free will an illusion?", 3, 5)  # energy cost = 3, energy gain = 5
