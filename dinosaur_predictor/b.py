@@ -1,4 +1,5 @@
-import os
+
+import datetime
 
 class Dinosaur:
     def __init__(self, reproduction_rate, lifespan, initial_population):
@@ -16,11 +17,6 @@ class Dinosaur:
         # Simulate die-off based on temperature and food availability
         die_off_rate = (1 - (temperature / 100) ** 0.5) * (1 - (food_availability / 100) ** 0.7)
         self.population -= self.population * die_off_rate
-    
-    def update(self, temperature, food_availability):
-        self.grow(temperature, food_availability)
-        self.die_off(temperature, food_availability)
-        self.population = max(0, self.population)  # prevent negative population
     
     def predict_population(self, years, temperature_changes, food_availability_changes):
         for year in range(years):
@@ -49,32 +45,7 @@ def main():
         # Predict population decline
         predicted_population = dino.predict_population(years, temperature_changes, food_availability_changes)
 
-        print(f"Predicted population after {years} years: {predicted_population}")
-
-    elif input_method == 'file':
-        # Read input from file
-        filename = input("Enter file name: ")
-        with open(filename, 'r') as f:
-            lines = f.readlines()
-
-        # Parse input from file
-        reproduction_rate = float(lines[0].strip())
-        lifespan = int(lines[1].strip())
-        initial_population = int(lines[2].strip())
-        years = int(lines[3].strip())
-        temperature_changes = [float(line.strip()) for line in lines[4:4+years]]
-        food_availability_changes = [float(line.strip()) for line in lines[4+years:]]
-
-        # Create a Dinosaur object
-        dino = Dinosaur(reproduction_rate, lifespan, initial_population)
-
-        # Predict population decline
-        predicted_population = dino.predict_population(years, temperature_changes, food_availability_changes)
-
-        print(f"Predicted population after {years} years: {predicted_population}")
-
-    else:
-        print("Invalid input. Please try again.")
+        # Export output to a txt file
 
 if __name__ == "__main__":
     main()
