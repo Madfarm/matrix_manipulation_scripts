@@ -1,61 +1,81 @@
 from math import sqrt
+import random
 
 def distance(point1, point2):
-  """Calculates the Euclidean distance between two points"""
-  x1, y1 = point1
-  x2, y2 = point2
-  return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    """Calculates the Euclidean distance between two points"""
+    x1, y1 = point1
+    x2, y2 = point2
+    return sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
-def nearest_neighbor(locations, max_distance):
-  """
-  Plans an interstellar travel route using Nearest Neighbor heuristic.
+def generate_routes(locations, max_distance, num_routes=3):
+    """
+    Generates multiple interstellar travel routes with varying start points.
 
-  Args:
-      locations: A list of tuples representing (X, Y) coordinates for interstellar bodies.
-      max_distance: The maximum travel distance per day.
+    Args:
+        locations: A list of tuples representing (X, Y) coordinates for interstellar bodies.
+        max_distance: The maximum travel distance per day.
+        num_routes: The number of routes to generate.
 
-  Returns:
-      A list representing the optimal travel route including Earth at the beginning and end.
-  """
-  visited = set([locations[0]])  # Start with Earth
-  remaining = set(locations[1:])  # Exclude Earth from remaining locations
-  current = locations[0]
-  route = [current]
+    Returns:
+        A list of dicts, where each dict contains:
+          'route': A list representing a travel route
+          'total_distance': The total distance of the route
+    """
 
-  while remaining:
-    closest = None
-    closest_distance = float('inf')  # Initialize with positive infinity
+    routes = []
+    for _ in range(num_routes):
+        # Copy the locations list and use a random starting location
+        unvisited = locations[:] 
+        start = random.choice(unvisited)
+        unvisited.remove(start) 
 
-    for point in remaining:
-      dist = distance(current, point)
-      if dist <= max_distance and dist < closest_distance:
-        closest = point
-        closest_distance = dist
+        route = [start]
+        current = start
+        total_distance = 0
 
-    if closest:
-      visited.add(closest)
-      remaining.remove(closest)
-      current = closest
-      route.append(current)
-    else:
-      # No reachable points within max distance, return incomplete route
-      return route + list(remaining) + route  # Add remaining as unreachable
+        while unvisited:
+            nearest = min(unvisited, key=lambda point: distance(current, point))
+            dist = distance(current, nearest)
 
-  # Reached all points, return route with Earth at the end
-  return route + [locations[0]]
+            if dist <= max_distance:
+                unvisited.remove(nearest)
+                route.append(nearest)
+                total_distance += dist
+                current = nearest
+            else:  
+                break  # No reachable points within max_distance 
+
+        # Return to Earth
+        total_distance += distance(current, locations[0])
+        route.append(locations[0])
+
+        routes.append({'route': route, 'total_distance': total_distance})
+
+    return routes
+
+def calculate_price(total_distance):
+    """
+    Calculates a price based on the total distance (lower distances are cheaper)
+    """
+    base_price = 1000  # Adjust as needed
+    return base_price + (total_distance * 0.5)  # Example: Price increases with distance
 
 # Example usage
 locations = [
-    (0, 0),  # Earth (starting point)
-    (10, 5),  # Planet X
-    (20, 20),  # Star Y
-    (5, 15),  # Asteroid Z
-    (-10, -10)  # Black Hole W
+    (0, 0),  # Earth
+    (10, 5), 
+    (20, 20),
+    (5, 15),
+    (-10, -10)  
 ]
 max_distance = 15
+num_routes = 3 
 
-route = nearest_neighbor(locations, max_distance)
-print("Optimal Travel Route:", route)
+routes = generate_routes(locations, max_distance, num_routes)
 
-# This will print something like:
-# Optimal Travel Route: [(0, 0), (5, 15), (10, 5), (20, 20), (-10, -10), (0, 0)]
+# Sort routes based on total distance and display
+for i, route_info in enumerate(sorted(routes, key=lambda x: x['total_distance'])):
+    price = calculate_price(route_info['total_distance'])
+    print(f"Route {i+1}: {route_info['route']}")
+    print(f"Total Distance: {route_info['total_distance']:.2f}")
+    print(f"Price: {price:.2f} Galactic Credits\n")
