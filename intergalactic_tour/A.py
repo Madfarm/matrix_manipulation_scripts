@@ -1,5 +1,6 @@
 from math import sqrt
 import random
+import os
 
 def distance(point1, point2):
     """Calculates the Euclidean distance between two points"""
@@ -60,22 +61,52 @@ def calculate_price(total_distance):
     base_price = 1000  # Adjust as needed
     return base_price + (total_distance * 0.5)  # Example: Price increases with distance
 
-# Example usage
-locations = [
-    (0, 0),  # Earth
-    (10, 5), 
-    (20, 20),
-    (5, 15),
-    (-10, -10)  
-]
-max_distance = 15
-num_routes = 3 
+def display_menu(routes, balance):
+    """Displays a console menu for the user to interact with"""
+    os.system('clear')  # Clear the console
+    print(f"Galactic Travel Agency - Balance: {balance:.2f} Galactic Credits")
+    print("Available Routes:")
+    for i, route_info in enumerate(routes):
+        price = calculate_price(route_info['total_distance'])
+        print(f"[{i+1}] Distance: {route_info['total_distance']:.2f} - Price: {price:.2f}")
 
-routes = generate_routes(locations, max_distance, num_routes)
+    print("[Q] Quit")
 
-# Sort routes based on total distance and display
-for i, route_info in enumerate(sorted(routes, key=lambda x: x['total_distance'])):
-    price = calculate_price(route_info['total_distance'])
-    print(f"Route {i+1}: {route_info['route']}")
-    print(f"Total Distance: {route_info['total_distance']:.2f}")
-    print(f"Price: {price:.2f} Galactic Credits\n")
+def main():
+    """Main function to handle user interaction and route purchasing"""
+    locations = [
+        (0, 0),  # Earth (starting point)
+        (10, 5),  # Planet X
+        (20, 20),  # Star Y
+        (5, 15),  # Asteroid Z
+        (-10, -10)  # Black Hole W
+    ]
+    max_distance = 15
+    num_routes = 3
+    user_balance = 10000.0  # Starting balance
+
+    while True:
+        routes = generate_routes(locations, max_distance, num_routes)
+        display_menu(routes, user_balance)
+
+        choice = input("Select a route to purchase or press 'Q' to quit: ")
+
+        if choice.upper() == 'Q':
+            break
+
+        if not choice.isdigit() or int(choice) not in range(1, num_routes+1):
+            print("Invalid choice. Please select a valid route number or 'Q' to quit.")
+            continue
+        
+        selected_route = routes[int(choice)-1]
+        price = calculate_price(selected_route['total_distance'])
+
+        if price <= user_balance:
+            user_balance -= price
+            print(f"You purchased Route {choice} for {price:.2f} Galactic Credits! Enjoy your trip!")
+            print(f"Your new balance is: {user_balance:.2f} Galactic Credits")
+        else:
+            print("Insufficient funds! Please select a different route or top up your balance.")
+
+if __name__ == "__main__":
+    main()
