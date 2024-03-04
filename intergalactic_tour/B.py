@@ -1,6 +1,7 @@
+import os
 from math import sqrt
 import random
-import os
+from datetime import datetime
 
 def distance(point1, point2):
     """Calculates the Euclidean distance between two points"""
@@ -61,6 +62,13 @@ def calculate_price(total_distance):
     base_price = 1000  # Adjust as needed
     return base_price + (total_distance * 0.5)  # Example: Price increases with distance
 
+def log_purchase(logfile, route_info, price, balance):
+    """Logs the purchase details to the specified logfile"""
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(logfile, "a") as f:
+        f.write(f"{current_time} - Route Purchased: {route_info['route']} - Price: {price:.2f} - Remaining Balance: {balance:.2f}\n")
+
+
 def display_menu(routes, balance):
     """Displays a console menu for the user to interact with"""
     os.system('clear')  # Clear the console
@@ -84,6 +92,7 @@ def main():
     max_distance = 15
     num_routes = 3
     user_balance = 10000.0  # Starting balance
+    logfile = "purchase_log.txt"  # Specify your logfile name
 
     while True:
         routes = generate_routes(locations, max_distance, num_routes)
@@ -103,6 +112,7 @@ def main():
 
         if price <= user_balance:
             user_balance -= price
+            log_purchase(logfile, selected_route, price, user_balance)  # Log the purchase!
             print(f"You purchased Route {choice} for {price:.2f} Galactic Credits! Enjoy your trip!")
             print(f"Your new balance is: {user_balance:.2f} Galactic Credits")
         else:

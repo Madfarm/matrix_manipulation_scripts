@@ -1,6 +1,8 @@
+import os
+import datetime
 from math import sqrt
 import random
-import os
+
 
 def distance(point1, point2):
     """Calculates the Euclidean distance between two points"""
@@ -61,6 +63,14 @@ def calculate_price(total_distance):
     base_price = 1000  # Adjust as needed
     return base_price + (total_distance * 0.5)  # Example: Price increases with distance
 
+def log_purchase(route_info, price):
+    """Logs a purchase to a logfile with a timestamp"""
+    now = datetime.datetime.now()
+    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+    with open("purchase_log.txt", "a") as logfile:
+        logfile.write(f"{timestamp} - Route Purchased: {route_info['route']} - Price: {price:.2f}\n")
+
+
 def display_menu(routes, balance):
     """Displays a console menu for the user to interact with"""
     os.system('clear')  # Clear the console
@@ -94,19 +104,17 @@ def main():
         if choice.upper() == 'Q':
             break
 
-        if not choice.isdigit() or int(choice) not in range(1, num_routes+1):
-            print("Invalid choice. Please select a valid route number or 'Q' to quit.")
-            continue
-        
-        selected_route = routes[int(choice)-1]
-        price = calculate_price(selected_route['total_distance'])
+        if choice.isdigit() and int(choice) in range(1, num_routes+1):
+            selected_route = routes[int(choice)-1]
+            price = calculate_price(selected_route['total_distance'])
 
-        if price <= user_balance:
-            user_balance -= price
-            print(f"You purchased Route {choice} for {price:.2f} Galactic Credits! Enjoy your trip!")
-            print(f"Your new balance is: {user_balance:.2f} Galactic Credits")
-        else:
-            print("Insufficient funds! Please select a different route or top up your balance.")
+            if price <= user_balance:
+                user_balance -= price
+                print(f"You purchased Route {choice} for {price:.2f} Galactic Credits! Enjoy your trip!")
+                print(f"Your new balance is: {user_balance:.2f} Galactic Credits")
+                log_purchase(selected_route, price)  # Log the purchase
+            else:
+                print("Insufficient funds! Please select a different route or top up your balance.")
 
 if __name__ == "__main__":
     main()
