@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, val=None):
+    def __init__(self, val):
         self.val = val
         self.next = None
 
@@ -8,50 +8,66 @@ class LinkedList:
         self.head = None
 
     def insert(self, val):
+        new_node = Node(val)
         if not self.head:
-            self.head = Node(val)
+            self.head = new_node
         else:
-            current = self.head
-            while current.next:
-                current = current.next
-            current.next = Node(val)
+            current_node = self.head
+            while current_node.next:
+                current_node = current_node.next
+            current_node.next = new_node
 
     def delete(self, val):
-        if self.head:
-            if self.head.val == val:
-                self.head = self.head.next
-            else:
-                current = self.head
-                while current.next and current.next.val != val:
-                    current = current.next
-                if current.next:
-                    current.next = current.next.next
+        if not self.head:
+            return
+        if self.head.val == val:
+            self.head = self.head.next
+        else:
+            current_node = self.head
+            while current_node.next and current_node.next.val != val:
+                current_node = current_node.next
+            if current_node.next:
+                current_node.next = current_node.next.next
 
     def search(self, val):
-        current = self.head
-        while current:
-            if current.val == val:
+        current_node = self.head
+        while current_node:
+            if current_node.val == val:
                 return True
-            current = current.next
+            current_node = current_node.next
         return False
 
     def print_list(self):
-        current = self.head
-        while current:
-            print(current.val, end=' ')
-            current = current.next
+        current_node = self.head
+        while current_node:
+            print(current_node.val, end=' ')
+            current_node = current_node.next
         print()
 
+    def reverse(self):
+        prev_node = None
+        current_node = self.head
+        while current_node:
+            next_node = current_node.next
+            current_node.next = prev_node
+            prev_node = current_node
+            current_node = next_node
+        self.head = prev_node
 
-# Example usage
-ll = LinkedList()
-ll.insert(5)
-ll.insert(10)
-ll.insert(15)
-ll.print_list()  # Output: 5 10 15
+# Create a linked list and add some nodes to it
+linked_list = LinkedList()
+linked_list.insert(1)
+linked_list.insert(2)
+linked_list.insert(3)
+linked_list.insert(4)
 
-ll.delete(10)
-ll.print_list()  # Output: 5 15
+# Print the linked list
+print("Original linked list:")
+linked_list.print_list()
 
-print(ll.search(15))  # Output: True
-print(ll.search(20))  # Output: False
+# Reverse the linked list
+linked_list.reverse()
+
+# Print the reversed linked list
+print("Reversed linked list:")
+linked_list.print_list()

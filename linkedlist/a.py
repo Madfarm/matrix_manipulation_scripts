@@ -44,23 +44,28 @@ class LinkedList:
             current_node = current_node.next
         print()
 
+    def reverse(self):
+        prev_node = None
+        current_node = self.head
+        while current_node:
+            next_node = current_node.next
+            current_node.next = prev_node
+            prev_node = current_node
+            current_node = next_node
+        self.head = prev_node
 
-# Testing the LinkedList class
-linked_list = LinkedList()
+# Testing the reverse method
+ll = LinkedList()
+ll.insert(1)
+ll.insert(2)
+ll.insert(3)
+ll.insert(4)
+ll.insert(5)
 
-# Insertion
-linked_list.insert(5)
-linked_list.insert(10)
-linked_list.insert(15)
-linked_list.insert(20)
+print("Original LinkedList: ")
+ll.print_list()
 
-# Printing the list
-linked_list.print_list()  # Output: 5 10 15 20
+ll.reverse()
 
-# Searching
-print(linked_list.search(10))  # Output: True
-print(linked_list.search(13))  # Output: False
-
-# Deletion
-linked_list.delete(15)
-linked_list.print_list()  # Output: 5 10 20
+print("Reversed LinkedList: ")
+ll.print_list()
