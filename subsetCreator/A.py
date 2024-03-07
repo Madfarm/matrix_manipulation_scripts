@@ -1,22 +1,14 @@
-def powerset(arr):
-    """
-    Returns every possible subset from a given array
-    """
-    def backtrack(arr, subset, index):
-        if index == len(arr):
-            # Reached the end of the array, add the current subset to the result
-            result.append(subset[:])
-        else:
-            # Try including the current element in the subset
-            subset.append(arr[index])
-            backtrack(arr, subset, index + 1)
-            # Try excluding the current element from the subset
-            subset.pop()
-            backtrack(arr, subset, index + 1)
+def get_subsets(array):
+    n = len(array)
+    output = []
 
-    result = []
-    backtrack(arr, [], 0)
-    return result
+    # for each mask from 0 to 2**n-1
+    for bit in range(2**n):
+        # create binary representation of mask
+        bin_mask = bin(bit)[2:].zfill(n)
+        # use binary mask to generate a subset
+        output.append([array[i] for i in range(n) if bin_mask[i]=='1'])
+    return output
 
-arr = [1, 2, 3, 4]
-print(powerset(arr)) 
+array = [1, 2, 3]
+print(get_subsets(array))

@@ -1,15 +1,15 @@
-def powerset(arr):
-    """
-    Returns every possible subset from a given array
-    """
+def find_subsets(nums):
     subsets = []
-    for i in range(2**len(arr)):
-        subset = []
-        for j in range(len(arr)):
-            if (i >> j) & 1:
-                subset.append(arr[j])
-        subsets.append(subset)
+    generate_subsets(nums, 0, [], subsets)
     return subsets
 
-arr = [1, 2, 3, 4]
-print(powerset(arr))
+def generate_subsets(nums, index, current, subsets):
+    subsets.append(list(current))
+    for i in range(index, len(nums)):
+        current.append(nums[i])
+        generate_subsets(nums, i + 1, current, subsets)
+        current.pop()
+
+# Test the function
+nums = [1, 2, 3]
+print(find_subsets(nums))
