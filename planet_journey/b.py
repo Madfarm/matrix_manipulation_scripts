@@ -29,11 +29,22 @@ class Planet:
         daily_temperature_variation = temperature_variation / self.year_length
         expected_temperature = self.avg_temp + daily_temperature_variation * day
         return expected_temperature
+    
+    def calculate_temp_difference(self, other_planet, day):
+        # Calculate the temperature difference between two planets on a given day
+        self_temp = self.calculate_temp_on_day(day)
+        other_temp = other_planet.calculate_temp_on_day(day)
+        temp_diff = self_temp - other_temp
 
-# Testing the new method
-earth = Planet("Earth", 24, 365, 1, 15, 9.8, 149.6)
-print(earth.calculate_temp_on_day(100))  # Expected output: around 15.33
-print(earth.calculate_temp_on_day(200))  # Expected output: around 15.67
+        if temp_diff < 0:
+            return f"The temperature is {abs(temp_diff)} degrees colder on {other_planet.name} compared to {self.name} on day {day}"
+        else:
+            return f"The temperature is {temp_diff} degrees hotter on {other_planet.name} compared to {self.name} on day {day}"
+    
 
-# Note: The results are approximate and depend on the specifics of the planet's climate, 
-# which are not taken into account in this simple calculation.
+# Create two planet objects
+earth = Planet("Earth", 24, 365, 1, 15, 9.8, 1)
+mars = Planet("Mars", 24.6, 687, 2, -67, 3.7, 1.5)
+
+# Calculate the temperature difference between Earth and Mars on day 100
+print(earth.calculate_temp_difference(mars, 100))
