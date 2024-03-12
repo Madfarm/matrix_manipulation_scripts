@@ -18,7 +18,7 @@ def findMedianSortedArrays(nums1, nums2):
 
         if maxLeftX <= minRightY and maxLeftY <= minRightX:
             if (x + y) % 2 == 0:
-                return (max(maxLeftX, maxLeftY) + min(minRightX, minRightY)) / 2 
+                return (max(maxLeftX, maxLeftY) + min(minRightX, minRightY)) / 2.0
             else:
                 return max(maxLeftX, maxLeftY)
 
