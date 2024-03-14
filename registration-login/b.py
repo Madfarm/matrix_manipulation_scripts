@@ -1,56 +1,84 @@
-import re
+class User:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+        self.logged_in = False
+        self.login_count = 0
 
-class UserManagement:
+class UserSystem:
     def __init__(self):
         self.users = {}
-        self.logged_in_users = []
-
-    def register(self, username, password):
-        if not self.validate_username(username):
-            return "Invalid username. Username must be between 6 and 20 characters and contain only alphanumeric characters."
-        if not self.validate_password(password):
-            return "Invalid password. Password must be between 8 and 50 characters, contain at least one uppercase letter, one lowercase letter, and one number."
-        if username in self.users:
-            return "Username already exists."
-        self.users[username] = password
-        return "User registered successfully."
-
-    def login(self, username, password):
-        if username not in self.users or self.users[username] != password:
-            return "Invalid username or password."
-        if username in self.logged_in_users:
-            return "User is already logged in."
-        self.logged_in_users.append(username)
-        return "User logged in successfully."
-
-    def logout(self, username):
-        if username not in self.logged_in_users:
-            return "User is not logged in."
-        self.logged_in_users.remove(username)
-        return "User logged out successfully."
+        self.logged_in_users = set()
 
     def validate_username(self, username):
-        if len(username) < 6 or len(username) > 20:
+        if len(username) < 3:
             return False
-        if not re.match("^[A-Za-z0-9]+$", username):
+        if not username.isalnum():
             return False
         return True
 
     def validate_password(self, password):
-        if len(password) < 8 or len(password) > 50:
+        if len(password) < 8:
             return False
-        if not re.search("[a-z]", password):
+        if not any(char.isdigit() for char in password):
             return False
-        if not re.search("[A-Z]", password):
-            return False
-        if not re.search("[0-9]", password):
+        if not any(char.isalpha() for char in password):
             return False
         return True
 
-user_management = UserManagement()
-print(user_management.register("user123", "Password1"))
-print(user_management.login("user123", "Password1"))
-print(user_management.logged_in_users)
-print(user_management.logout("user123"))
-print(user_management.logged_in_users)
-print(user_management.users)
+    def register_user(self, username, password):
+        if not self.validate_username(username):
+            print("Invalid username")
+            return
+        if not self.validate_password(password):
+            print("Invalid password")
+            return
+        if username in self.users:
+            print("Username already exists")
+            return
+        self.users[username] = User(username, password)
+        print("User registered successfully")
+
+    def login_user(self, username, password):
+        if username not in self.users or self.users[username].password != password:
+            print("Invalid username or password")
+            return
+        if self.users[username].logged_in:
+            print("User is already logged in")
+            return
+        self.users[username].logged_in = True
+        self.users[username].login_count += 1
+        self.logged_in_users.add(username)
+        print("User logged in successfully")
+
+    def logout_user(self, username):
+        if username not in self.users or not self.users[username].logged_in:
+            print("User is not logged in")
+            return
+        self.users[username].logged_in = False
+        self.logged_in_users.remove(username)
+        print("User logged out successfully")
+
+    def logout_all_users(self):
+        for username in self.logged_in_users:
+            self.users[username].logged_in = False
+        self.logged_in_users.clear()
+        print("All users logged out successfully")
+
+    def get_login_count(self, username):
+        if username not in self.users:
+            print("User does not exist")
+            return
+        print(f"User {username} has logged in {self.users[username].login_count} times")
+
+# Test the code
+user_system = UserSystem()
+user_system.register_user("user1", "password1")
+user_system.register_user("user2", "password2")
+user_system.login_user("user1", "password1")
+user_system.login_user("user1", "password1")
+user_system.login_user("user2", "password2")
+user_system.logout_user("user1")
+user_system.logout_all_users()
+user_system.get_login_count("user1")
+user_system.get_login_count("user2")

@@ -3,6 +3,7 @@ class User:
         self.username = username
         self.password = password
         self.logged_in = False
+        self.login_count = 0
 
 class UserSystem:
     def __init__(self):
@@ -46,6 +47,7 @@ class UserSystem:
             print("User is already logged in")
             return
         self.users[username].logged_in = True
+        self.users[username].login_count += 1
         self.logged_in_users.add(username)
         print("User logged in successfully")
 
@@ -57,12 +59,21 @@ class UserSystem:
         self.logged_in_users.remove(username)
         print("User logged out successfully")
 
-# Testing the class
+    def logout_all_users(self):
+        for username in list(self.logged_in_users):
+            self.logout_user(username)
+
+# Testing the new functionality
 user_system = UserSystem()
-user_system.register_user("user1", "Password1")
-user_system.register_user("user2", "Password2")
-user_system.login_user("user1", "Password1")
-user_system.login_user("user2", "Password2")
-user_system.logout_user("user1")
-print(user_system.users)
-print(user_system.logged_in_users)
+user_system.register_user('user1', 'password1')
+user_system.register_user('user2', 'password2')
+
+user_system.login_user('user1', 'password1')
+user_system.login_user('user2', 'password2')
+user_system.login_user('user1', 'password1')
+
+print(user_system.users['user1'].login_count)  # prints: 2
+print(user_system.users['user2'].login_count)  # prints: 1
+
+user_system.logout_all_users()
+print(user_system.logged_in_users)  # prints: set()
