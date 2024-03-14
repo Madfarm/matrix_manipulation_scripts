@@ -10,7 +10,7 @@ def product_except_self(nums):
     # R contains the product of all the numbers to the right
     # Note: for the last element, there are no elements to the right,
     # so the R would be 1
-    R = 1;
+    R = 1
     for i in reversed(range(length)):
         # For the index 'i', R would contain the 
         # product of all numbers to the right. We update R accordingly
