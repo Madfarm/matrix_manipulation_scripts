@@ -13,42 +13,13 @@ class Insurance:
         self.premium = self.calculate_premium()
 
     def calculate_premium(self):
-        age_factor = 1
-        if self.person.age < 25:
-            age_factor = 1.2
-        elif self.person.age < 30:
-            age_factor = 1.1
-        elif self.person.age < 35:
-            age_factor = 1.0
-        else:
-            age_factor = 0.9
-
-        income_factor = 1
-        if self.person.income < 50000:
-            income_factor = 1.2
-        elif self.person.income < 75000:
-            income_factor = 1.1
-        elif self.person.income < 100000:
-            income_factor = 1.0
-        else:
-            income_factor = 0.9
-
-        premium = (self.person.income * income_factor) + (self.person.age * age_factor)
+        age_factor = 1 + (self.person.age // 10) * 0.1
+        income_factor = 1 + (self.person.income // 10000) * 0.05
+        deductible_factor = 1 + (self.deductible // 1000) * 0.02
+        premium = (120 * age_factor * income_factor * deductible_factor)
         return premium
 
-# Create a person and an insurance
-person = Person("John Doe", 35, 75000)
+# Test the code
+person = Person("John Doe", 35, 50000)
 insurance = Insurance(person, 500, "Health", 100000)
-
-# Print the person's details
-print("Person's Details:")
-print("Name:", person.name)
-print("Age:", person.age)
-print("Income:", person.income)
-
-# Print the insurance details
-print("\nInsurance Details:")
-print("Deductible:", insurance.deductible)
-print("Type:", insurance.type)
-print("Limit:", insurance.limit)
-print("Premium:", insurance.premium)
+print(insurance.premium)
