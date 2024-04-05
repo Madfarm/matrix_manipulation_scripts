@@ -1,23 +1,20 @@
-import pandas as pd
+import numpy as np
 
+# Create two matrices
+matrix1 = np.array([[1, 2, 3],
+                    [4, 5, 6]])
 
-# Define the standalone function
-def func(num):
-    return num + num
+matrix2 = np.array([[7, 8],
+                    [9, -10],
+                    [11, 12]])
 
+# Perform matrix multiplication using numpy.dot()
+result_matrix = np.dot(matrix1, matrix2)
 
-# Define the function that applies the standalone function to the dataframe
-def apply_function(df, func):
-    return df.apply(func)
+# Alternatively, you can use the @ operator
+# result_matrix = matrix1 @ matrix2
 
+cum = np.cumsum(result_matrix)
 
-# Create the dataframe
-df = pd.DataFrame([[1, 5], [2, 6], [3, 7], [4, 8]], 
-                  columns=["col_A", "col_B"])
-
-
-# Apply the function to the dataframe
-result = apply_function(df, func)
-
-
-print(result)
+# Display the result
+print(cum)
