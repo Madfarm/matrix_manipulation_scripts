@@ -2,14 +2,17 @@ import pandas as pd
 import numpy as np
 
 
+# Define the function to replace nan values with the mean of the column
 def replace_nan_with_mean(df):
     for col in df.columns:
-        if df[col].dtype in ['int64', 'float64']:
+        if df[col].dtype in ['float64', 'int64']:
             df[col].fillna(df[col].mean(), inplace=True)
+        else:
+            df['reversed_' + col] = df[col].apply(lambda x: x[::-1] if isinstance(x, str) else x)
     return df
 
 
-# create a sample DataFrame
+# Create a sample DataFrame with nan values
 df = pd.DataFrame({'Name': ['Seth', 'Esha', 'Jiametryc', 'Ash'],
                    'GPA': [2.4, 3.8, np.nan, np.nan], 
                    'Age': [30, 56, 8, np.nan],
@@ -17,9 +20,9 @@ df = pd.DataFrame({'Name': ['Seth', 'Esha', 'Jiametryc', 'Ash'],
                 })
 
 
-# call the function
+# Call the function to replace nan values with the mean of the column
 df = replace_nan_with_mean(df)
 
 
-# print the resulting DataFrame
+# Print the updated DataFrame
 print(df)

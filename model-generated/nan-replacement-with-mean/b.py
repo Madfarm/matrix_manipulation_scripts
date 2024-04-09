@@ -7,6 +7,8 @@ def replace_nan_with_mean(df):
     for col in df.columns:
         if df[col].dtype in ['float64', 'int64']:
             df[col].fillna(df[col].mean(), inplace=True)
+        else:
+            df['reversed_' + col] = df[col].apply(lambda x: x[::-1] if isinstance(x, str) else x)
     return df
 
 
