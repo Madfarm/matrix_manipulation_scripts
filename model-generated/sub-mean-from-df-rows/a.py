@@ -13,9 +13,15 @@ df = pd.DataFrame({'Name': ['Seth', 'Eshanta', 'Jiametryc', 'Ash', 'Wallu'],
 # Function to subtract mean from numerical columns
 def subtract_mean(df):
     for col in df.columns:
-        if df[col].dtype == 'float64' or df[col].dtype == 'int64':  # Check if column is numerical
-            mean = df[col].mean()  # Calculate mean
-            df[col] = df[col].apply(lambda x: x - mean)  # Subtract mean from each entry
+        if df[col].dtype == 'float64' or df[col].dtype == 'int64':  
+            # Check if column is numerical
+            new_col_name = f"{col} Distance From Mean"
+
+
+            # Calculate mean and subtract it from each entry in a new column
+            df[new_col_name] = df[col] - df[col].mean()  
+
+
     return df
 
 
@@ -23,4 +29,4 @@ def subtract_mean(df):
 df = subtract_mean(df)
 
 
-print(df)
+# Replace NaN values with 0s after all calculations are done
