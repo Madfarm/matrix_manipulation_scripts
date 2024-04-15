@@ -1,7 +1,25 @@
 import pandas as pd
 
 
-# Create the DataFrame
+def transform_data(data):
+    # Remove columns containing nan values
+    data = data.dropna(axis=1)
+
+
+    # Sort columns alphabetically, except 'order_no'
+    cols = sorted([col for col in data.columns if col != 'order_no'])
+    cols.insert(0, 'ord_no')
+    data = data[cols]
+
+
+    # Truncate all values to two decimals
+    data = data.round(2)
+
+
+    return data
+
+
+# Test the function
 orders_data = pd.DataFrame({
 'ord_no':[70001,70009,70002,70004,70007,70005,70008,70010,70003,70012,70011,70013],
 'purch_amt':[150.5123,270.65111,65.26,110.58843,948.5,2400.6,5760.23,1983.413,2480.4,250.4665, 75.229,3045.679],
@@ -10,17 +28,8 @@ orders_data = pd.DataFrame({
 'salesman_id': [5002,5005,5001,5003,5002,5001,5001,5006,5003,5002,5007,5001]})
 
 
-# Convert 'ord_date' column to datetime
-orders_data['ord_date'] = pd.to_datetime(orders_data['ord_date'])
+transformed_data = transform_data(orders_data)
 
 
-# Group by 'customer_id' and calculate mean, min, and max of 'purch_amt'
-grouped_data = orders_data.groupby('customer_id')['purch_amt'].agg(['mean', 'min', 'max'])
-
-
-# Reset the index to get 'customer_id' as a column
-grouped_data = grouped_data.reset_index()
-
-
-# Print the result
-print(grouped_data)
+# Print the resulting data frame
+print(transformed_data)
