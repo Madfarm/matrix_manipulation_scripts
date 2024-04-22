@@ -2,8 +2,43 @@ import pandas as pd
 import numpy as np
 
 
-# Create a data frame from the given input
-data = {
+def process_data(df):
+    # Create a numpy series from the values that are greater than 62
+    series = df.values.flatten()
+    series = series[series > 62]
+
+
+    # Calculate the mean, median, and standard deviation of the values
+    mean = np.mean(series)
+    median = np.median(series)
+    std_dev = np.std(series)
+
+
+    # Calculate the median absolute deviation of the series
+    mad = np.median(np.abs(series - median))
+
+
+    # Truncate the calculations to two decimals
+    mean = round(mean, 2)
+    median = round(median, 2)
+    std_dev = round(std_dev, 2)
+    mad = round(mad, 3)  # Truncate MAD to three decimals
+
+
+    # Validate the values in the series and the truncated calculations
+    assert (series > 62).all(), "Series contains values less than or equal to 62"
+    assert mean == round(np.mean(series), 2), "Mean calculation is incorrect"
+    assert median == round(np.median(series), 2), "Median calculation is incorrect"
+    assert std_dev == round(np.std(series), 2), "Standard deviation calculation is incorrect"
+    assert mad == round(np.median(np.abs(series - np.median(series))), 3), "MAD calculation is incorrect"
+
+
+    # Return the sorted series and the calculations in a dictionary
+    return pd.Series(series).sort_values(), {"mean": mean, "median": median, "std_dev": std_dev, "mad": mad}
+
+
+# Test the function with the provided input
+df = pd.DataFrame({
     0: [17, 95, 13, 22, 28, 26, 82, 9],
     1: [74, 50, 68, 34, 33, 38, 62, 16],
     2: [93, 24, 31, 56, 59, 49, 96, 85],
@@ -14,39 +49,7 @@ data = {
     7: [24, 91, 75, 15, 48, 2, 88, 79],
     8: [2, 18, 60, 53, 49, 87, 69, 19],
     9: [61, 49, 66, 33, 80, 9, 99, 35]
-}
-df = pd.DataFrame(data)
-
-
-# Ensure all values in the dataframe are numerical
-assert df.apply(lambda s: pd.to_numeric(s, errors='coerce').notnull().all()).all(), "The dataframe contains non-numerical values"
-
-
-# Create a numpy series from the values that are greater than 62
-series = df.values.flatten()
-series = series[series > 62]
-
-
-# Ensure the series is not empty
-assert len(series) > 0, "The series is empty"
-
-
-# Calculate the mean, median and standard deviation of the series
-mean = round(np.mean(series), 2)
-median = round(np.median(series), 2)
-std_dev = round(np.std(series), 2)
-
-
-# Ensure the calculated values are numbers
-assert not np.isnan(mean) and not np.isnan(median) and not np.isnan(std_dev), "One or more calculations resulted in NaN"
-
-
-# Output the sorted series and the calculated values
-print("Sorted Series:")
-print(np.sort(series))
-print("\nCalculations:")
-print({
-    "Mean": mean,
-    "Median": median,
-    "Standard Deviation": std_dev
 })
+
+
+sorted_series, calculations = process_data(df)
