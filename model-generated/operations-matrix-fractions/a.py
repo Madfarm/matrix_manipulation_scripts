@@ -3,20 +3,20 @@ from fractions import Fraction
 
 
 def fractional_matrix_operations(matrix_a, matrix_b, operation):
-    # Perform the specified operation on matrix_a and matrix_b element-wise
+    assert operation in ["add", "subtract", "multiply", "divide"], "Invalid operation"
+
+
     if operation == "add":
-        result = matrix_a + matrix_b
+        result = np.add(matrix_a, matrix_b)
     elif operation == "subtract":
-        result = matrix_a - matrix_b
+        result = np.subtract(matrix_a, matrix_b)
     elif operation == "multiply":
-        result = matrix_a * matrix_b
+        result = np.multiply(matrix_a, matrix_b)
     elif operation == "divide":
-        result = matrix_a / matrix_b
-    else:
-        raise ValueError("Invalid operation. Please choose from: add, subtract, multiply, divide")
+        result = np.divide(matrix_a, matrix_b)
 
 
-    # Ensure that the result is a two-dimensional numpy array with elements represented as fractions
+    # Ensure the resulting matrix contains fractions
     result = np.vectorize(Fraction)(result)
 
 
@@ -29,4 +29,8 @@ matrix_b = np.array([[Fraction(1, 4), Fraction(1, 5)], [Fraction(1, 6), Fraction
 
 # Addition operation
 result_addition = fractional_matrix_operations(matrix_a, matrix_b, "add")
-print(result_addition)
+
+
+# Assertion to verify the contents of the final array
+expected_result = np.array([[Fraction(3, 4), Fraction(8, 15)], [Fraction(5, 12), Fraction(12, 35)]])
+assert np.array_equal(result_addition, expected_result), "Result does not match the expected result"

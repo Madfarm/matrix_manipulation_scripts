@@ -31,4 +31,5 @@ matrix_b = np.array([[Fraction(1, 4), Fraction(1, 5)], [Fraction(1, 6), Fraction
 result_addition = fractional_matrix_operations(matrix_a, matrix_b, "add")
 
 
-print(result_addition)
+# Assertion to verify the contents of the final array
+assert np.array_equal(result_addition, np.array([[Fraction(3, 4), Fraction(4, 15)], [Fraction(5, 12), Fraction(12, 35)]])), "Resulting array is not as expected"
