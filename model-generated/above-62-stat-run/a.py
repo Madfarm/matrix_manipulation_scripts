@@ -8,10 +8,13 @@ def process_data(df):
     series = series[series > 62]
 
 
-    # Calculate the mean, median, standard deviation, and median absolute deviation of the values
+    # Calculate the mean, median, and standard deviation of the values
     mean = np.mean(series)
     median = np.median(series)
     std_dev = np.std(series)
+
+
+    # Calculate the median absolute deviation of the series
     mad = np.median(np.abs(series - median))
 
 
@@ -19,7 +22,7 @@ def process_data(df):
     mean = round(mean, 2)
     median = round(median, 2)
     std_dev = round(std_dev, 2)
-    mad = round(mad, 3)
+    mad = round(mad, 3)  # Truncate MAD to three decimals
 
 
     # Validate the values in the series and the truncated calculations
@@ -27,11 +30,17 @@ def process_data(df):
     assert mean == round(np.mean(series), 2), "Mean calculation is incorrect"
     assert median == round(np.median(series), 2), "Median calculation is incorrect"
     assert std_dev == round(np.std(series), 2), "Standard deviation calculation is incorrect"
-    assert mad == round(np.median(np.abs(series - median)), 3), "Median absolute deviation calculation is incorrect"
+    assert mad == round(np.median(np.abs(series - np.median(series))), 3), "MAD calculation is incorrect"
 
 
     # Return the sorted series and the calculations in a dictionary
-    return pd.Series(series).sort_values(), {"mean": mean, "median": median, "std_dev": std_dev, "mad": mad}
+    df['mean'] = mean
+    df['median'] = median
+    df['std_dev'] = std_dev
+    df['mad'] = mad
+
+
+    return pd.Series(series).sort_values(ascending=False)
 
 
 # Test the function with the provided input
@@ -49,4 +58,8 @@ df = pd.DataFrame({
 })
 
 
-sorted_series, calculations = process_data(df)
+sorted_series = process_data(df)
+
+
+print(df)
+print(sorted_series)

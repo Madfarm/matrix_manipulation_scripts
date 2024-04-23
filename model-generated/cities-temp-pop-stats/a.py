@@ -15,14 +15,16 @@ def process_data(data):
     population_stats = {
         'mean': stats.tmean(data['Population (Est. 2023)']),
         'median': data['Population (Est. 2023)'].median(),
-        'std_dev': stats.tstd(data['Population (Est. 2023)'])
+        'std_dev': stats.tstd(data['Population (Est. 2023)']),
+        'mad': stats.median_abs_deviation(data['Population (Est. 2023)'])
     }
 
 
     temperature_stats = {
         'mean': stats.tmean(data['Average High Temp. (August)']),
         'median': data['Average High Temp. (August)'].median(),
-        'std_dev': stats.tstd(data['Average High Temp. (August)'])
+        'std_dev': stats.tstd(data['Average High Temp. (August)']),
+        'mad': stats.median_abs_deviation(data['Average High Temp. (August)'])
     }
 
 
@@ -48,12 +50,15 @@ data = pd.DataFrame({
 # Process the data
 result = process_data(data)
 
+
 # Validate the results
 assert result['population']['mean'] == 2681172.0
 assert result['population']['median'] == 2535945.0
 assert result['population']['std_dev'] == 965609.1733764063
+assert result['population']['mad'] == 532736.5
 
 
 assert result['temperature']['mean'] == 92.75
 assert result['temperature']['median'] == 91.5
 assert result['temperature']['std_dev'] == 9.535023160258536
+assert result['temperature']['mad'] == 6.0

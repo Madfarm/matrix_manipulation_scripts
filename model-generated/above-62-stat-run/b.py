@@ -33,8 +33,14 @@ def process_data(df):
     assert mad == round(np.median(np.abs(series - np.median(series))), 3), "MAD calculation is incorrect"
 
 
-    # Return the sorted series and the calculations in a dictionary
-    return pd.Series(series).sort_values(), {"mean": mean, "median": median, "std_dev": std_dev, "mad": mad}
+    # Return the sorted series and add the calculations to the original dataframe
+    df['mean'] = mean
+    df['median'] = median
+    df['std_dev'] = std_dev
+    df['mad'] = mad
+
+
+    return pd.Series(series).sort_values(ascending=False)
 
 
 # Test the function with the provided input
@@ -52,4 +58,8 @@ df = pd.DataFrame({
 })
 
 
-sorted_series, calculations = process_data(df)
+sorted_series = process_data(df)
+
+
+print(sorted_series)
+print(df)
