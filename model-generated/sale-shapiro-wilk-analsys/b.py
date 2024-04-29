@@ -2,22 +2,22 @@ import numpy as np
 from scipy.stats import shapiro
 
 
-# Define the sales data
+# Dataset
 sales_data = [10000, 12000, 11000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000]
 
 
-# Calculate the total sales for the year
+# Calculate total sales for the year
 total_sales = sum(sales_data)
 assert total_sales == 186000
 
 
-# Calculate the monthly average sales
-average_sales = total_sales / len(sales_data)
-assert average_sales == 15500.0
+# Determine the monthly average sales
+monthly_average_sales = total_sales / len(sales_data)
+assert monthly_average_sales == 15500.0
 
 
 # Identify the month with the highest sales
-highest_sales_month = np.argmax(sales_data) + 1  # Add 1 to convert from 0-indexed to 1-indexed month
+highest_sales_month = sales_data.index(max(sales_data)) + 1
 assert highest_sales_month == 12
 
 
@@ -27,6 +27,6 @@ assert percentage_change == [20.0, -8.333333333333332, 18.181818181818183, 7.692
 
 
 # Test whether the sales data follow a normal distribution using a Shapiro-Wilk test
-w_stat, p_value = shapiro(sales_data)
-assert w_stat == 0.9668962955474854
-assert p_value == 0.8757304549217224
+normality_test_result = shapiro(sales_data)
+assert normality_test_result.statistic == 0.9668962955474854
+assert normality_test_result.pvalue == 0.8757304549217224
