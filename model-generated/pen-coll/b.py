@@ -44,6 +44,15 @@ class PenCollection:
     def display_pens(self):
         print(self.pens)
 
+    def calculate_stats(self):
+        average = self.pens['value'].mean()
+        median = self.pens['value'].median()
+        std_dev = self.pens['value'].std()
+
+        print(f"Average: {average}")
+        print(f"Median: {median}")
+        print(f"Standard Deviation: {std_dev}")
+
 def main():
     collection = PenCollection()
 
@@ -53,33 +62,36 @@ def main():
         print("3. Update Pen")
         print("4. Delete Pen")
         print("5. Display Pens")
-        print("6. Exit")
+        print("6. Calculate Stats")
+        print("7. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == "1":
             name = input("Enter pen name: ")
-            id = input("Enter pen ID: ")
+            id = int(input("Enter pen ID: "))
             condition = input("Enter pen condition: ")
             value = float(input("Enter pen value (in USD): "))
             collection.create_pen(name, id, condition, value)
         elif choice == "2":
-            id = input("Enter pen ID: ")
+            id = int(input("Enter pen ID: "))
             pen = collection.read_pen(id)
             if pen is not None:
                 print(pen)
         elif choice == "3":
-            id = input("Enter pen ID: ")
+            id = int(input("Enter pen ID: "))
             name = input("Enter new pen name (or press Enter to keep the same): ")
             condition = input("Enter new pen condition (or press Enter to keep the same): ")
             value = input("Enter new pen value (or press Enter to keep the same): ")
             collection.update_pen(id, name or None, condition or None, float(value) if value else None)
         elif choice == "4":
-            id = input("Enter pen ID: ")
+            id = int(input("Enter pen ID: "))
             collection.delete_pen(id)
         elif choice == "5":
             collection.display_pens()
         elif choice == "6":
+            collection.calculate_stats()
+        elif choice == "7":
             break
         else:
             print("Invalid choice. Please try again.")

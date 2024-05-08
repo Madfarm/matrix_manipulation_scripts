@@ -12,8 +12,7 @@ class PenCollection:
         if id in self.pens.index:
             print("Pen with this ID already exists.")
         else:
-            new_pen = pd.DataFrame({'name': [name], 'condition': [condition], 'value': [value]}, index=[id])
-            self.pens = pd.concat([self.pens, new_pen])
+            self.pens.loc[id] = [name, condition, value]
             print("Pen created successfully.")
 
     def read_pen(self, id):
@@ -45,6 +44,17 @@ class PenCollection:
     def display_pens(self):
         print(self.pens)
 
+    def display_stats(self):
+        if not self.pens.empty:
+            average = self.pens['value'].mean()
+            median = self.pens['value'].median()
+            std_dev = self.pens['value'].std()
+            print(f"Average: {average}")
+            print(f"Median: {median}")
+            print(f"Standard Deviation: {std_dev}")
+        else:
+            print("No pens in collection.")
+
 def main():
     collection = PenCollection()
 
@@ -54,7 +64,8 @@ def main():
         print("3. Update Pen")
         print("4. Delete Pen")
         print("5. Display Pens")
-        print("6. Exit")
+        print("6. Display Stats")
+        print("7. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -81,6 +92,8 @@ def main():
         elif choice == "5":
             collection.display_pens()
         elif choice == "6":
+            collection.display_stats()
+        elif choice == "7":
             break
         else:
             print("Invalid choice. Please try again.")
