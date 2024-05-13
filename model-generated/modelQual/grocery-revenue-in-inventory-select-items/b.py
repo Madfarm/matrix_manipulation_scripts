@@ -1,25 +1,21 @@
 import pandas as pd
 from fractions import Fraction
-import numpy as np
 
-def calculate_inventory(df, product_names):
-    # Initialize an empty list to store the calculated values
-    calculated_values = []
+def calculate_inventory_value(df, product_names):
+    # Initialize an empty dictionary to store the total value of each item
+    total_values = {}
 
-    # Iterate over each row in the DataFrame
+    # Iterate over each row in the dataframe
     for index, row in df.iterrows():
-        # Check if the item matches any of the provided product names
+        # Check if the item name matches any of the provided product names
         if row['Item'] in product_names:
-            # Calculate the value by multiplying the price with the quantity
-            value = float(row['Price']) * row['Quantity']
-            calculated_values.append(value)
-        else:
-            # If the item doesn't match, insert a nan value
-            calculated_values.append(np.nan)
+            # Calculate the total value by multiplying the price with the quantity
+            total_value = float(row['Price']) * row['Quantity']
+            total_values[row['Item']] = total_value
 
-    return calculated_values
+    return total_values
 
-# Define the input data
+# Test the function
 df = pd.DataFrame({
     'Item': ['Apples', 'Bananas', 'Oranges', 'Milk'],
     'Quantity': [5, 3, 4, 2],
@@ -27,11 +23,5 @@ df = pd.DataFrame({
 })
 product_names = ['Oranges', 'Bananas']
 
-# Calculate the inventory values
-calculated_values = calculate_inventory(df, product_names)
+assert calculate_inventory_value(df, product_names) == {'Bananas': 0.75 * 3, 'Oranges': 1.5 * 4}, "Output does not match expected output"
 
-# Define the expected output
-expected_output = [np.nan, 9/4, 6, np.nan]
-
-# Assert that the calculated values match the expected output
-assert np.allclose(calculated_values, expected_output, equal_nan=True)
