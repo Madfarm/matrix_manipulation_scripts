@@ -13,6 +13,7 @@ def calculate_customer_retention(data):
     # Calculate the number of unique customers for each month
     num_customers = df.groupby(df['date'].dt.to_period('M'))['customer_id'].nunique()
 
+    print(num_customers)
 
     # Calculate the customer retention for the most recent month
     customer_retention = num_customers.iloc[-1] / num_customers.iloc[-2]

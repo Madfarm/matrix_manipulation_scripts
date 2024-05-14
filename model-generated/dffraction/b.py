@@ -33,4 +33,4 @@ df = pd.DataFrame({
 })
 
 
-sum_of_fractions, mean_of_fractions, std_dev_of_fractions = fraction_statistics(df)
+print(fraction_statistics(df))
