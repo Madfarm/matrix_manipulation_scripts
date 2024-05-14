@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from fractions import Fraction
 
 
@@ -10,3 +11,12 @@ df = pd.DataFrame({
 })
 
 print(df)
+
+sensor_data = pd.Series([
+    [0.1, 0.2, np.nan, 0.4],
+    [0.5, 0.6, 0.7, 0.8],
+    [0.9, np.nan, 1.1, 1.2],
+    [1.3, 1.4, 1.5, 1.6]
+])
+
+print(sensor_data)
