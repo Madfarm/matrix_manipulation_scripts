@@ -9,14 +9,12 @@ def generate_currency(num_currencies):
         name = ''.join(random.choice(string.ascii_uppercase) for _ in range(3))
         while name in currencies:
             name = ''.join(random.choice(string.ascii_uppercase) for _ in range(3))
-        value = Decimal(str(round(random.random(), 2)))
+        value = Decimal(str(random.random()))
         currencies[name] = value
     
-    # Calculate mean and median
-    values = list(currencies.values())
-    mean_value = sum(values) / len(values)
-    median_value = statistics.median(values)
-
+    mean_value = sum(currencies.values()) / len(currencies)
+    median_value = statistics.median(currencies.values())
+    
     return {
         'currencies': currencies,
         'mean': mean_value,
@@ -27,9 +25,11 @@ num_currencies = 3
 result = generate_currency(num_currencies)
 
 # Assertions
-assert all(len(name) == 3 and name.isalpha() and name.isupper() for name in result['currencies'].keys()), "Currency names do not follow the guidelines"
-assert all(isinstance(value, Decimal) for value in result['currencies'].values()), "Values are not of Decimal type"
-assert sum(result['currencies'].values()) / len(result['currencies']) == result['mean'], "Mean is incorrect"
-assert statistics.median(list(result['currencies'].values())) == result['median'], "Median is incorrect"
+for name in result['currencies']:
+    assert len(name) == 3, "Name length is not 3"
+    assert name.isalpha(), "Name contains non-alphabetical characters"
+    assert name.isupper(), "Name is not uppercase"
+    assert isinstance(result['currencies'][name], Decimal), "Value is not a Decimal"
 
-print(result)
+assert result['mean'] == sum(result['currencies'].values()) / len(result['currencies']), "Mean is incorrect"
+assert result['median'] == statistics.median(result['currencies'].values()), "Median is incorrect"
