@@ -18,7 +18,7 @@ medians = df.groupby('Name').median()
 
 # Merge the medians with the original dataframe
 df = df.merge(medians, on='Name', suffixes=('', '_median'))
-
+# print(df)
 
 # Replace the numeric columns with the median values
 df[['GPA', 'Age', 'Salary']] = df[['GPA_median', 'Age_median', 'Salary_median']]
@@ -30,6 +30,5 @@ df = df.drop(['GPA_median', 'Age_median', 'Salary_median'], axis=1)
 
 # Drop duplicate rows
 df = df.drop_duplicates(subset='Name')
-
 
 print(df)

@@ -9,28 +9,7 @@ df = pd.DataFrame({'Name': ['Seth', 'Eshanta', 'Jiametryc', 'Ash', 'Wallu'],
                 })
 
 
-def get_age_bracket(age):
-    if pd.isnull(age):
-        return np.nan
-    elif 0 <= age <= 10:
-        return "0-10"
-    elif 11 <= age <= 18:
-        return "11-18"
-    elif 19 <= age <= 30:
-        return "19-30"
-    elif 31 <= age <= 50:
-        return "31-50"
-    elif 51 <= age <= 65:
-        return "51-65"
-    elif 66 <= age <= 80:
-        return "66-80"
-    elif 81 <= age <= 120:
-        return "81-120"
-    else:
-        return np.nan
-
-
-df['Age_Bracket'] = df['Age'].apply(get_age_bracket)
-
-
-print(df)
+bins = [0, 10, 19, 31, 50, 65, 80, 120]
+labels = ['0-10', '11-18', '19-30', '31-50', '51-65', '66-80', '81-120']
+df['Age_Bracket'] = pd.cut(df['Age'], bins, labels=labels, right=False)
+assert df['Age_Bracket'].tolist() == ["19-30", "51-65", "81-120", np.nan, "19-30"]
