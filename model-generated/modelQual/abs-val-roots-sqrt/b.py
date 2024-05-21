@@ -1,12 +1,13 @@
-from sympy import symbols, Eq, solve
+import sympy as sp
 
-# Declare the variable
-x = symbols('x')
+# Define the variable
+a = sp.symbols('a')
 
-# Declare the equation
-equation = Eq(x**2 + 5*x - 3, 0)
+# Define the equation
+equation = sp.sqrt(12*a + 25) / a - sp.sqrt(61) / 3
 
 # Solve the equation
-solution = solve(equation, x)
+solutions = sp.solve(equation, a)
 
-print(solution)
+# Print the solutions
+print(solutions)

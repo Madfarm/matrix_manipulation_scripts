@@ -3,11 +3,11 @@ import sympy as sp
 # Define the variable
 a = sp.symbols('a')
 
-# Define the quadratic equation
-equation = a * sp.symbols('x')**2 + 5*sp.symbols('x') - 3
+# Define the equation
+equation = sp.Abs(sp.sqrt(12*a + 25) / a) - sp.sqrt(61) / 3
 
-# Solve the equation using the quadratic formula
-solutions = sp.solve(equation, sp.symbols('x'))
+# Solve the equation
+solution = sp.solve(equation, a)[0]
 
-# Print the solutions
-print(solutions)
+# Print the solution
+print(solution)
