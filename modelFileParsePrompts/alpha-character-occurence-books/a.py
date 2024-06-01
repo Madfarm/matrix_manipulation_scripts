@@ -2,10 +2,9 @@ import pandas as pd
 import string
 
 # Load data
-df = pd.read_csv(file_path)
-
+df = pd.read_csv(filepath)
 # Extract string values
-string_values = df.select_dtypes(include=['string']).values.flatten().tolist()
+string_values = df.select_dtypes(include=['object']).values.flatten().tolist()
 
 # Join all string values into a single string
 all_strings = ' '.join(string_values)
